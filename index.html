@@ -58,7 +58,7 @@
                 <button onclick="switchTab('schedule')" id="btn-schedule" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Calendario</button>
                 <button onclick="switchTab('brackets')" id="btn-brackets" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Eliminatorias</button>
                 <button onclick="switchTab('rules')" id="btn-rules" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Reglas</button>
-                <!-- NUEVO BOTÓN: CRÉDITOS -->
+                <!-- BOTÓN: CRÉDITOS -->
                 <button onclick="switchTab('credits')" id="btn-credits" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border"><i class="fa-solid fa-users-gear mr-1"></i> Créditos</button>
                 <button onclick="switchTab('admin')" id="btn-admin" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border"><i class="fa-solid fa-lock mr-1"></i> Admin</button>
             </nav>
@@ -187,7 +187,7 @@
             </div>
         </section>
 
-        <!-- NUEVA PESTAÑA: CRÉDITOS DEL EQUIPO -->
+        <!-- PESTAÑA: CRÉDITOS DEL EQUIPO -->
         <section id="tab-credits" class="hidden space-y-6">
             <div class="bg-chess-card border border-chess-border p-8 rounded-3xl space-y-6 shadow-xl">
                 <div class="text-center space-y-2">
@@ -313,7 +313,7 @@
                         <p class="text-xs text-gray-400">Gestión completa de estudiantes, fechas y resultados</p>
                     </div>
                     <div class="flex items-center gap-3">
-                        <!-- NUEVO BOTÓN: REINICIAR TORNEO -->
+                        <!-- BOTÓN: REINICIAR TORNEO -->
                         <button onclick="reiniciarTorneo()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5">
                             <i class="fa-solid fa-rotate-right"></i> Reiniciar Torneo
                         </button>
@@ -475,707 +475,734 @@
     <footer class="bg-chess-dark border-t border-chess-border py-6 mt-12 text-center text-xs text-gray-400">
         <p>Sistema de Gestión de Torneo de Ajedrez Escolar &copy; 2026</p>
     </footer>
+    
+<!-- LÓGICA JAVASCRIPT CONECTADA A FIREBASE FIRESTORE -->
+<script type="module">
+    // Importar Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-    <!-- LÓGICA JAVASCRIPT -->
-    <script>
-        // ESTADO GLOBAL Y PERSISTENCIA EN LOCALSTORAGE
-        let appData = JSON.parse(localStorage.getItem('chess_tournament_data')) || {
-            students: [], 
-            matches: {},  
-            brackets: { r16: [], qf: [], sf: [], final: [] }
-        };
+    // Tu configuración de Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyA2mfU84tJWQHD-SWf4xXYuowV4N00_Ra4",
+        authDomain: "torneoajedrez.firebaseapp.com",
+        projectId: "torneoajedrez",
+        storageBucket: "torneoajedrez.firebasestorage.app",
+        messagingSenderId: "181519995288",
+        appId: "1:181519995288:web:8b21c219caa7dc9d3b1bed"
+    };
 
-        const TOTAL_GROUPS = 16;
+    // Inicializar Firebase y Firestore
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        function saveData() {
-            localStorage.setItem('chess_tournament_data', JSON.stringify(appData));
+    // ESTADO GLOBAL
+    window.appData = {
+        students: [], 
+        matches: {},  
+        brackets: { r16: [], qf: [], sf: [], final: [] }
+    };
+
+    const TOTAL_GROUPS = 16;
+    const docRef = doc(db, "torneo", "estado_actual");
+
+    // FUNCIÓN PARA GUARDAR EN LA NUBE (FIRESTORE)
+    window.saveData = async function() {
+        try {
+            await setDoc(docRef, window.appData);
+        } catch (e) {
+            console.error("Error al guardar en la nube: ", e);
+            alert("Hubo un error al sincronizar con la nube.");
         }
+    }
 
-        // FUNCIÓN: REINICIAR TORNEO (LIMPIA BRACKETS Y CALENDARIO/FECHAS DE ELIMINATORIAS)
-        function reiniciarTorneo() {
-            if (!confirm('¿Estás seguro de reiniciar el torneo? Esto borrará todos los brackets generados, los ganadores de las llaves y las fechas programadas de la fase eliminatoria (los estudiantes y puntos de grupos se mantendrán).')) {
-                return;
+    // CARGAR DATOS DESDE LA NUBE AL INICIAR
+    async function loadDataFromCloud() {
+        try {
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                window.appData = docSnap.data();
+            } else {
+                // Si el documento no existe aún, lo creamos vacío en la nube
+                await setDoc(docRef, window.appData);
             }
-
-            // Limpiar brackets por completo
-            appData.brackets = { r16: [], qf: [], sf: [], final: [] };
-
-            saveData();
-            renderSchedule();
-            renderBracketsView();
-            populateBracketMatches();
-            populateAdminBracketSchedule();
-
-            alert('¡El torneo se ha reiniciado con éxito! Se han eliminado los brackets y el calendario de eliminatorias.');
+        } catch (e) {
+            console.error("Error al cargar datos de la nube: ", e);
         }
 
-        // INICIALIZACIÓN DE SELECTS DE GRUPOS
-        function initGroupSelectors() {
-            const selects = ['group-select', 'reg-grupo', 'schedule-filter-group', 'admin-res-group'];
-            selects.forEach(selId => {
-                const el = document.getElementById(selId);
-                if (!el) return;
-                const currentVal = el.value;
-                el.innerHTML = '';
-                if (selId === 'schedule-filter-group') {
-                    el.innerHTML = '<option value="ALL">Todos los grupos y fases</option>';
-                }
-                for (let i = 1; i <= TOTAL_GROUPS; i++) {
-                    const groupName = `Grupo ${String.fromCharCode(64 + i)}`;
-                    el.innerHTML += `<option value="${groupName}">${groupName}</option>`;
-                }
-                if (currentVal) el.value = currentVal;
-            });
-        }
+        // Inicializar la interfaz una vez obtenidos los datos
+        initGroupSelectors();
+        updateStatCounters();
+        renderGroups();
+        renderSchedule();
+        renderBracketsView();
+    }
 
-        // NAVEGACIÓN ENTRE PESTAÑAS (INCLUYENDO 'credits')
-        function switchTab(tabId) {
-            const tabs = ['home', 'rules', 'groups', 'schedule', 'brackets', 'credits', 'admin'];
-            tabs.forEach(t => {
-                const tabEl = document.getElementById(`tab-${t}`);
-                if (tabEl) tabEl.classList.add('hidden');
-                const btn = document.getElementById(`btn-${t}`);
-                if (btn) {
-                    btn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border";
-                }
-            });
-            const targetTab = document.getElementById(`tab-${tabId}`);
-            if (targetTab) targetTab.classList.remove('hidden');
-            
-            const activeBtn = document.getElementById(`btn-${tabId}`);
-            if (activeBtn) {
-                if (tabId === 'admin' || tabId === 'credits') {
-                    activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-amber-500 text-chess-darker shadow";
-                } else {
-                    activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-chess-accent text-chess-darker shadow";
-                }
+    // --- EL RESTO DE TUS FUNCIONES SE MANTIENEN IGUAL ---
+
+    window.reiniciarTorneo = async function() {
+        if (!confirm('¿Estás seguro de reiniciar el torneo en la nube? Esto borrará brackets y fechas eliminatorias.')) {
+            return;
+        }
+        window.appData.brackets = { r16: [], qf: [], sf: [], final: [] };
+        await saveData();
+        renderSchedule();
+        renderBracketsView();
+        populateBracketMatches();
+        populateAdminBracketSchedule();
+        alert('¡El torneo se ha reiniciado en la nube con éxito!');
+    }
+
+    window.initGroupSelectors = function() {
+        const selects = ['group-select', 'reg-grupo', 'schedule-filter-group', 'admin-res-group'];
+        selects.forEach(selId => {
+            const el = document.getElementById(selId);
+            if (!el) return;
+            const currentVal = el.value;
+            el.innerHTML = '';
+            if (selId === 'schedule-filter-group') {
+                el.innerHTML = '<option value="ALL">Todos los grupos y fases</option>';
             }
-
-            if (tabId === 'groups') renderGroups();
-            if (tabId === 'schedule') renderSchedule();
-            if (tabId === 'brackets') renderBracketsView();
-            if (tabId === 'admin') {
-                if (sessionStorage.getItem('admin_auth') === 'true') {
-                    document.getElementById('admin-auth-box').classList.add('hidden');
-                    document.getElementById('admin-dashboard').classList.remove('hidden');
-                    renderAdminStudents();
-                    populateAdminMatches();
-                    populateBracketMatches();
-                    populateAdminBracketSchedule();
-                }
+            for (let i = 1; i <= TOTAL_GROUPS; i++) {
+                const groupName = `Grupo ${String.fromCharCode(64 + i)}`;
+                el.innerHTML += `<option value="${groupName}">${groupName}</option>`;
             }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (currentVal) el.value = currentVal;
+        });
+    }
+
+    window.switchTab = function(tabId) {
+        const tabs = ['home', 'rules', 'groups', 'schedule', 'brackets', 'credits', 'admin'];
+        tabs.forEach(t => {
+            const tabEl = document.getElementById(`tab-${t}`);
+            if (tabEl) tabEl.classList.add('hidden');
+            const btn = document.getElementById(`btn-${t}`);
+            if (btn) {
+                btn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border";
+            }
+        });
+        const targetTab = document.getElementById(`tab-${tabId}`);
+        if (targetTab) targetTab.classList.remove('hidden');
+        
+        const activeBtn = document.getElementById(`btn-${tabId}`);
+        if (activeBtn) {
+            if (tabId === 'admin' || tabId === 'credits') {
+                activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-amber-500 text-chess-darker shadow";
+            } else {
+                activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-chess-accent text-chess-darker shadow";
+            }
         }
 
-        // AUTENTICACIÓN ADMIN
-        function authenticateAdmin(e) {
-            e.preventDefault();
-            const pass = document.getElementById('admin-pass-input').value;
-            if (pass === 'Puro501chingonyelprofealonsotambien') {
-                sessionStorage.setItem('admin_auth', 'true');
+        if (tabId === 'groups') renderGroups();
+        if (tabId === 'schedule') renderSchedule();
+        if (tabId === 'brackets') renderBracketsView();
+        if (tabId === 'admin') {
+            if (sessionStorage.getItem('admin_auth') === 'true') {
                 document.getElementById('admin-auth-box').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 renderAdminStudents();
                 populateAdminMatches();
                 populateBracketMatches();
                 populateAdminBracketSchedule();
-            } else {
-                alert('Contraseña incorrecta.');
             }
         }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-        function logoutAdmin() {
-            sessionStorage.removeItem('admin_auth');
-            document.getElementById('admin-auth-box').classList.remove('hidden');
-            document.getElementById('admin-dashboard').classList.add('hidden');
-            document.getElementById('admin-pass-input').value = '';
-        }
-
-        // REGISTRAR ESTUDIANTE Y REGENERAR ENFRENTAMIENTOS
-        function registerStudent(e) {
-            e.preventDefault();
-            const nombre = document.getElementById('reg-nombre').value.trim();
-            const apellido = document.getElementById('reg-apellido').value.trim();
-            const grupo = document.getElementById('reg-grupo').value;
-
-            const newStudent = {
-                id: 'stu_' + Date.now() + Math.random().toString(36).substr(2, 5),
-                nombre,
-                apellido,
-                grupo,
-                pj: 0, g: 0, e: 0, p: 0, pts: 0
-            };
-
-            appData.students.push(newStudent);
-            regenerateGroupMatches(grupo);
-            saveData();
-
-            document.getElementById('reg-nombre').value = '';
-            document.getElementById('reg-apellido').value = '';
-            updateStatCounters();
+    window.authenticateAdmin = function(e) {
+        e.preventDefault();
+        const pass = document.getElementById('admin-pass-input').value;
+        if (pass === 'Puro501chingonyelprofealonsotambien') {
+            sessionStorage.setItem('admin_auth', 'true');
+            document.getElementById('admin-auth-box').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.remove('hidden');
             renderAdminStudents();
             populateAdminMatches();
-            alert(`¡Estudiante ${nombre} ${apellido} registrado con éxito en el ${grupo}!`);
+            populateBracketMatches();
+            populateAdminBracketSchedule();
+        } else {
+            alert('Contraseña incorrecta.');
         }
+    }
 
-        // ELIMINAR ESTUDIANTE
-        function deleteStudent(studentId) {
-            if (!confirm('¿Estás seguro de eliminar a este estudiante? Se limpiarán sus puntos y enfrentamientos.')) return;
-            
-            const student = appData.students.find(s => s.id === studentId);
-            if (student) {
-                for (let gKey in appData.matches) {
-                    appData.matches[gKey].forEach(m => {
-                        if ((m.whiteId === studentId || m.blackId === studentId) && m.result) {
-                            const rivalId = m.whiteId === studentId ? m.blackId : m.whiteId;
-                            const rival = appData.students.find(s => s.id === rivalId);
-                            if (rival) {
-                                rival.pj--;
-                                if (m.result === 'DRAW') { rival.e--; rival.pts -= 0.5; }
-                                else if ((m.result === 'WHITE' && m.whiteId === rivalId) || (m.result === 'BLACK' && m.blackId === rivalId)) {
-                                    rival.g--; rival.pts -= 1.0;
-                                } else {
-                                    rival.p--;
-                                }
+    window.logoutAdmin = function() {
+        sessionStorage.removeItem('admin_auth');
+        document.getElementById('admin-auth-box').classList.remove('hidden');
+        document.getElementById('admin-dashboard').classList.add('hidden');
+        document.getElementById('admin-pass-input').value = '';
+    }
+
+    window.registerStudent = async function(e) {
+        e.preventDefault();
+        const nombre = document.getElementById('reg-nombre').value.trim();
+        const apellido = document.getElementById('reg-apellido').value.trim();
+        const grupo = document.getElementById('reg-grupo').value;
+
+        const newStudent = {
+            id: 'stu_' + Date.now() + Math.random().toString(36).substr(2, 5),
+            nombre,
+            apellido,
+            grupo,
+            pj: 0, g: 0, e: 0, p: 0, pts: 0
+        };
+
+        window.appData.students.push(newStudent);
+        regenerateGroupMatches(grupo);
+        await saveData();
+
+        document.getElementById('reg-nombre').value = '';
+        document.getElementById('reg-apellido').value = '';
+        updateStatCounters();
+        renderAdminStudents();
+        populateAdminMatches();
+        alert(`¡Estudiante ${nombre} ${apellido} registrado en la nube (${grupo})!`);
+    }
+
+    window.deleteStudent = async function(studentId) {
+        if (!confirm('¿Estás seguro de eliminar a este estudiante de la nube?')) return;
+        
+        const student = window.appData.students.find(s => s.id === studentId);
+        if (student) {
+            for (let gKey in window.appData.matches) {
+                window.appData.matches[gKey].forEach(m => {
+                    if ((m.whiteId === studentId || m.blackId === studentId) && m.result) {
+                        const rivalId = m.whiteId === studentId ? m.blackId : m.whiteId;
+                        const rival = window.appData.students.find(s => s.id === rivalId);
+                        if (rival) {
+                            rival.pj--;
+                            if (m.result === 'DRAW') { rival.e--; rival.pts -= 0.5; }
+                            else if ((m.result === 'WHITE' && m.whiteId === rivalId) || (m.result === 'BLACK' && m.blackId === rivalId)) {
+                                rival.g--; rival.pts -= 1.0;
+                            } else {
+                                rival.p--;
                             }
                         }
-                    });
-                }
-            }
-
-            appData.students = appData.students.filter(s => s.id !== studentId);
-            for (let gKey in appData.matches) {
-                appData.matches[gKey] = appData.matches[gKey].filter(m => m.whiteId !== studentId && m.blackId !== studentId);
-            }
-
-            saveData();
-            updateStatCounters();
-            renderAdminStudents();
-            populateAdminMatches();
-            alert('Estudiante eliminado y datos sincronizados correctamente.');
-        }
-
-        // REGENERAR EMPAREJAMIENTOS CON BALANCE DE PIEZAS
-        function regenerateGroupMatches(grupo) {
-            const groupStudents = appData.students.filter(s => s.grupo === grupo);
-            appData.matches[grupo] = [];
-
-            if (groupStudents.length < 2) return;
-
-            for (let i = 0; i < groupStudents.length; i++) {
-                for (let j = i + 1; j < groupStudents.length; j++) {
-                    const s1 = groupStudents[i];
-                    const s2 = groupStudents[j];
-                    const white = (i + j) % 2 === 0 ? s1 : s2;
-                    const black = (i + j) % 2 === 0 ? s2 : s1;
-
-                    appData.matches[grupo].push({
-                        id: `match_${grupo}_${i}_${j}_${Date.now()}`,
-                        whiteId: white.id,
-                        blackId: black.id,
-                        result: null,
-                        fecha: ''
-                    });
-                }
-            }
-        }
-
-        // RENDERIZAR TABLA DE POSICIONES DE GRUPOS
-        function renderGroups() {
-            const group = document.getElementById('group-select').value;
-            const groupStudents = appData.students.filter(s => s.grupo === group);
-
-            groupStudents.sort((a, b) => b.pts - a.pts);
-
-            const tbody = document.getElementById('group-table-body');
-            tbody.innerHTML = '';
-
-            if (groupStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-gray-400">No hay estudiantes registrados en este grupo.</td></tr>`;
-                return;
-            }
-
-            groupStudents.forEach((st, idx) => {
-                let trendIcon = `<span class="text-gray-500">—</span>`;
-                if (idx === 0 && groupStudents.length > 1) trendIcon = `<span class="text-emerald-400 font-bold">▲ Arriba</span>`;
-                else if (idx === groupStudents.length - 1 && groupStudents.length > 1) trendIcon = `<span class="text-rose-400 font-bold">▼ Abajo</span>`;
-
-                tbody.innerHTML += `
-                    <tr class="hover:bg-chess-dark transition">
-                        <td class="p-4 font-bold text-amber-400">${idx + 1}</td>
-                        <td class="p-4 font-semibold text-white">${st.nombre} ${st.apellido}</td>
-                        <td class="p-4 text-center">${st.pj}</td>
-                        <td class="p-4 text-center text-emerald-400">${st.g}</td>
-                        <td class="p-4 text-center text-amber-400">${st.e}</td>
-                        <td class="p-4 text-center text-rose-400">${st.p}</td>
-                        <td class="p-4 text-center font-bold text-amber-400">${st.pts}</td>
-                        <td class="p-4 text-center text-xs">${trendIcon}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        // RENDERIZAR CALENDARIO (INCLUYE GRUPOS Y BRACKETS)
-        function renderSchedule() {
-            const filterGroup = document.getElementById('schedule-filter-group').value;
-            const container = document.getElementById('schedule-container');
-            container.innerHTML = '';
-
-            let itemsToShow = [];
-
-            // 1. Añadir partidos de grupos
-            for (let gKey in appData.matches) {
-                if (filterGroup === 'ALL' || filterGroup === gKey) {
-                    appData.matches[gKey].forEach(m => {
-                        const whiteStudent = appData.students.find(s => s.id === m.whiteId);
-                        const blackStudent = appData.students.find(s => s.id === m.blackId);
-                        if (whiteStudent && blackStudent) {
-                            itemsToShow.push({
-                                tipo: 'grupo',
-                                subtitulo: `${gKey}`,
-                                p1: `${whiteStudent.nombre} ${whiteStudent.apellido}`,
-                                p2: `${blackStudent.nombre} ${blackStudent.apellido}`,
-                                label1: 'Blancas',
-                                label2: 'Negras',
-                                result: m.result,
-                                fecha: m.fecha
-                            });
-                        }
-                    });
-                }
-            }
-
-            // 2. Añadir partidos de Eliminación Directa (Brackets)
-            const bracketRounds = [
-                { key: 'r16', name: 'Octavos de Final' },
-                { key: 'qf', name: 'Cuartos de Final' },
-                { key: 'sf', name: 'Semifinales' },
-                { key: 'final', name: 'Gran Final' }
-            ];
-
-            bracketRounds.forEach(round => {
-                if (filterGroup === 'ALL' || filterGroup === round.name) {
-                    (appData.brackets[round.key] || []).forEach(m => {
-                        itemsToShow.push({
-                            tipo: 'bracket',
-                            subtitulo: round.name,
-                            p1: m.p1,
-                            p2: m.p2,
-                            label1: 'Participante 1',
-                            label2: 'Participante 2',
-                            winner: m.winner,
-                            fecha: m.fecha || ''
-                        });
-                    });
-                }
-            });
-            if (itemsToShow.length === 0) {
-                container.innerHTML = `<div class="col-span-2 bg-chess-card border border-chess-border p-8 rounded-2xl text-center text-gray-400">No hay enfrentamientos programados todavía.</div>`;
-                return;
-            }
-            itemsToShow.forEach((item, idx) => {
-                let statusBadge = `<span class="text-xs bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full border border-amber-500/30">Próximo Encuentro</span>`;
-                
-                if (item.tipo === 'grupo') {
-                    if (item.result === 'WHITE') statusBadge = `<span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">Ganó Blancas</span>`;
-                    if (item.result === 'BLACK') statusBadge = `<span class="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/30">Ganó Negras</span>`;
-                    if (item.result === 'DRAW') statusBadge = `<span class="text-xs bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30">Tablas (Empate)</span>`;
-                } else {
-                    if (item.winner) statusBadge = `<span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">Ganador: ${item.winner}</span>`;
-                }
-
-                let fechaFormatted = item.fecha ? new Date(item.fecha).toLocaleString() : 'Fecha por programar';
-
-                container.innerHTML += `
-                    <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-md space-y-4">
-                        <div class="flex justify-between items-center text-xs text-gray-400 border-b border-chess-border pb-3">
-                            <span class="font-bold text-amber-400">${item.subtitulo} — Encuentro #${idx + 1}</span>
-                            ${statusBadge}
-                        </div>
-                        <div class="text-xs text-gray-300 flex items-center gap-2">
-                            <i class="fa-solid fa-clock text-amber-500"></i> <span><b>Fecha Programada:</b> ${fechaFormatted}</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 items-center">
-                            <div class="bg-chess-dark p-3.5 rounded-xl border border-chess-border text-center">
-                                <span class="text-[10px] uppercase font-bold text-gray-400 block mb-1">${item.label1}</span>
-                                <span class="font-bold text-white text-sm">${item.p1}</span>
-                            </div>
-                            <div class="bg-chess-dark p-3.5 rounded-xl border border-chess-border text-center">
-                                <span class="text-[10px] uppercase font-bold text-gray-400 block mb-1">${item.label2}</span>
-                                <span class="font-bold text-white text-sm">${item.p2}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // ADMINISTRACIÓN DE PARTIDAS DE GRUPO (SEPARAR FECHA Y RESULTADO)
-        function populateAdminMatches() {
-            const group = document.getElementById('admin-res-group').value;
-            const matchSelect = document.getElementById('admin-res-match');
-            if (!matchSelect) return;
-            matchSelect.innerHTML = '';
-
-            const matches = appData.matches[group] || [];
-            if (matches.length === 0) {
-                matchSelect.innerHTML = `<option value="">No hay partidas en este grupo</option>`;
-                return;
-            }
-
-            matches.forEach((m) => {
-                const w = appData.students.find(s => s.id === m.whiteId);
-                const b = appData.students.find(s => s.id === m.blackId);
-                if (w && b) {
-                    const statusText = m.result ? ` [Jugado]` : (m.fecha ? ` [Programado]` : '');
-                    matchSelect.innerHTML += `<option value="${m.id}">[Blancas] ${w.nombre} vs [Negras] ${b.nombre}${statusText}</option>`;
-                }
-            });
-            loadMatchDateToInput();
-        }
-
-        function loadMatchDateToInput() {
-            const group = document.getElementById('admin-res-group').value;
-            const matchId = document.getElementById('admin-res-match').value;
-            const dateInput = document.getElementById('admin-res-date');
-            if (!matchId || !dateInput) return;
-
-            const match = (appData.matches[group] || []).find(m => m.id === matchId);
-            if (match && match.fecha) {
-                dateInput.value = match.fecha;
-            } else {
-                dateInput.value = '';
-            }
-        }
-
-        // GUARDAR SÓLO LA FECHA DE LA PARTIDA DE GRUPO
-        function saveMatchDateOnly() {
-            const group = document.getElementById('admin-res-group').value;
-            const matchId = document.getElementById('admin-res-match').value;
-            const newDate = document.getElementById('admin-res-date').value;
-
-            if (!matchId) {
-                alert('Selecciona una partida válida.');
-                return;
-            }
-            const match = (appData.matches[group] || []).find(m => m.id === matchId);
-            if (!match) return;
-
-            match.fecha = newDate;
-            saveData();
-            populateAdminMatches();
-            alert('¡Fecha y hora programadas con éxito (sin alterar resultados)!');
-        }
-
-        // GUARDAR SÓLO EL RESULTADO DE LA PARTIDA DE GRUPO
-        function saveMatchResultOnly() {
-            const group = document.getElementById('admin-res-group').value;
-            const matchId = document.getElementById('admin-res-match').value;
-            const outcome = document.getElementById('admin-res-outcome').value;
-
-            if (!matchId) {
-                alert('Selecciona una partida válida.');
-                return;
-            }
-            const match = (appData.matches[group] || []).find(m => m.id === matchId);
-            if (!match) return;
-
-            if (match.result) {
-                const wSt = appData.students.find(s => s.id === match.whiteId);
-                const bSt = appData.students.find(s => s.id === match.blackId);
-                if (wSt && bSt) {
-                    wSt.pj--; bSt.pj--;
-                    if (match.result === 'WHITE') { wSt.g--; wSt.pts -= 1; bSt.p--; }
-                    else if (match.result === 'BLACK') { bSt.g--; bSt.pts -= 1; wSt.p--; }
-                    else if (match.result === 'DRAW') { wSt.e--; wSt.pts -= 0.5; bSt.e--; bSt.pts -= 0.5; }
-                }
-            }
-
-            match.result = outcome;
-            const whiteStudent = appData.students.find(s => s.id === match.whiteId);
-            const blackStudent = appData.students.find(s => s.id === match.blackId);
-
-            if (whiteStudent && blackStudent) {
-                whiteStudent.pj++;
-                blackStudent.pj++;
-
-                if (outcome === 'WHITE') {
-                    whiteStudent.g++; whiteStudent.pts += 1.0;
-                    blackStudent.p++;
-                } else if (outcome === 'BLACK') {
-                    blackStudent.g++; blackStudent.pts += 1.0;
-                    whiteStudent.p++;
-                } else if (outcome === 'DRAW') {
-                    whiteStudent.e++; whiteStudent.pts += 0.5;
-                    blackStudent.e++; blackStudent.pts += 0.5;
-                }
-            }
-
-            saveData();
-            populateAdminMatches();
-            alert('¡Resultado de la partida guardado y posiciones actualizadas!');
-        }
-
-        // GENERAR BRACKETS
-        function generateBrackets() {
-            for (let gKey in appData.matches) {
-                const matchesInGroup = appData.matches[gKey];
-                for (let m of matchesInGroup) {
-                    if (!m.result) {
-                        alert(`Bloqueo activo: Hay partidas pendientes en el ${gKey}. Deben jugarse y registrarse todas las partidas antes de generar los octavos.`);
-                        return;
                     }
-                }
+                });
             }
+        }
 
-            let qualified = [];
-            for (let i = 1; i <= TOTAL_GROUPS; i++) {
-                const gName = `Grupo ${String.fromCharCode(64 + i)}`;
-                const gStudents = appData.students.filter(s => s.grupo === gName);
-                gStudents.sort((a, b) => b.pts - a.pts);
-                if (gStudents.length > 0) {
-                    qualified.push(`${gStudents[0].nombre} ${gStudents[0].apellido}`);
-                }
-            }
+        window.appData.students = window.appData.students.filter(s => s.id !== studentId);
+        for (let gKey in window.appData.matches) {
+            window.appData.matches[gKey] = window.appData.matches[gKey].filter(m => m.whiteId !== studentId && m.blackId !== studentId);
+        }
 
-            if (qualified.length < 2) {
-                alert('Se necesitan al menos 2 estudiantes clasificados para generar los brackets.');
-                return;
-            }
+        await saveData();
+        updateStatCounters();
+        renderAdminStudents();
+        populateAdminMatches();
+        alert('Estudiante eliminado y nube sincronizada.');
+    }
 
-            appData.brackets.r16 = [];
-            for (let i = 0; i < 8; i++) {
-                appData.brackets.r16.push({
-                    id: `r16_${i}`,
-                    p1: qualified[i * 2] || 'Por definir',
-                    p2: qualified[i * 2 + 1] || 'Por definir',
-                    winner: null,
+    function regenerateGroupMatches(grupo) {
+        const groupStudents = window.appData.students.filter(s => s.grupo === grupo);
+        window.appData.matches[grupo] = [];
+
+        if (groupStudents.length < 2) return;
+
+        for (let i = 0; i < groupStudents.length; i++) {
+            for (let j = i + 1; j < groupStudents.length; j++) {
+                const s1 = groupStudents[i];
+                const s2 = groupStudents[j];
+                const white = (i + j) % 2 === 0 ? s1 : s2;
+                const black = (i + j) % 2 === 0 ? s2 : s1;
+
+                window.appData.matches[grupo].push({
+                    id: `match_${grupo}_${i}_${j}_${Date.now()}`,
+                    whiteId: white.id,
+                    blackId: black.id,
+                    result: null,
                     fecha: ''
                 });
             }
+        }
+    }
 
-            appData.brackets.qf = [ {id:'qf_0', p1:'Ganador R16 #1', p2:'Ganador R16 #2', winner:null, fecha:''}, {id:'qf_1', p1:'Ganador R16 #3', p2:'Ganador R16 #4', winner:null, fecha:''}, {id:'qf_2', p1:'Ganador R16 #5', p2:'Ganador R16 #6', winner:null, fecha:''}, {id:'qf_3', p1:'Ganador R16 #7', p2:'Ganador R16 #8', winner:null, fecha:''} ];
-            appData.brackets.sf = [ {id:'sf_0', p1:'Ganador QF #1', p2:'Ganador QF #2', winner:null, fecha:''}, {id:'sf_1', p1:'Ganador QF #3', p2:'Ganador QF #4', winner:null, fecha:''} ];
-            appData.brackets.final = [ {id:'final_0', p1:'Ganador SF #1', p2:'Ganador SF #2', winner:null, fecha:''} ];
+    window.renderGroups = function() {
+        const group = document.getElementById('group-select').value;
+        const groupStudents = window.appData.students.filter(s => s.grupo === group);
 
-            saveData();
-            renderBracketsView();
-            populateBracketMatches();
-            populateAdminBracketSchedule();
-            alert('¡Fase de grupos completada! Octavos de Final generados.');
+        groupStudents.sort((a, b) => b.pts - a.pts);
+
+        const tbody = document.getElementById('group-table-body');
+        tbody.innerHTML = '';
+
+        if (groupStudents.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-gray-400">No hay estudiantes registrados en este grupo.</td></tr>`;
+            return;
         }
 
-        function populateBracketMatches() {
-            const round = document.getElementById('admin-bracket-round').value;
-            const matchSelect = document.getElementById('admin-bracket-match');
-            if (!matchSelect) return;
+        groupStudents.forEach((st, idx) => {
+            let trendIcon = `<span class="text-gray-500">—</span>`;
+            if (idx === 0 && groupStudents.length > 1) trendIcon = `<span class="text-emerald-400 font-bold">▲ Arriba</span>`;
+            else if (idx === groupStudents.length - 1 && groupStudents.length > 1) trendIcon = `<span class="text-rose-400 font-bold">▼ Abajo</span>`;
 
-            matchSelect.innerHTML = '';
-            const matches = appData.brackets[round] || [];
+            tbody.innerHTML += `
+                <tr class="hover:bg-chess-dark transition">
+                    <td class="p-4 font-bold text-amber-400">${idx + 1}</td>
+                    <td class="p-4 font-semibold text-white">${st.nombre} ${st.apellido}</td>
+                    <td class="p-4 text-center">${st.pj}</td>
+                    <td class="p-4 text-center text-emerald-400">${st.g}</td>
+                    <td class="p-4 text-center text-amber-400">${st.e}</td>
+                    <td class="p-4 text-center text-rose-400">${st.p}</td>
+                    <td class="p-4 text-center font-bold text-amber-400">${st.pts}</td>
+                    <td class="p-4 text-center text-xs">${trendIcon}</td>
+                </tr>
+            `;
+        });
+    }
 
-            if (matches.length === 0) {
-                matchSelect.innerHTML = `<option value="">Genera los brackets primero</option>`;
-                return;
+    window.renderSchedule = function() {
+        const filterGroup = document.getElementById('schedule-filter-group').value;
+        const container = document.getElementById('schedule-container');
+        container.innerHTML = '';
+
+        let itemsToShow = [];
+
+        for (let gKey in window.appData.matches) {
+            if (filterGroup === 'ALL' || filterGroup === gKey) {
+                window.appData.matches[gKey].forEach(m => {
+                    const whiteStudent = window.appData.students.find(s => s.id === m.whiteId);
+                    const blackStudent = window.appData.students.find(s => s.id === m.blackId);
+                    if (whiteStudent && blackStudent) {
+                        itemsToShow.push({
+                            tipo: 'grupo',
+                            subtitulo: `${gKey}`,
+                            p1: `${whiteStudent.nombre} ${whiteStudent.apellido}`,
+                            p2: `${blackStudent.nombre} ${blackStudent.apellido}`,
+                            label1: 'Blancas',
+                            label2: 'Negras',
+                            result: m.result,
+                            fecha: m.fecha
+                        });
+                    }
+                });
             }
-
-            matches.forEach((m) => {
-                const wText = m.winner ? ` [Ganador: ${m.winner}]` : '';
-                matchSelect.innerHTML += `<option value="${m.id}">${m.p1} vs ${m.p2}${wText}</option>`;
-            });
         }
 
-        function populateAdminBracketSchedule() {
-            const round = document.getElementById('admin-bracket-sched-round').value;
-            const matchSelect = document.getElementById('admin-bracket-sched-match');
-            const dateInput = document.getElementById('admin-bracket-sched-date');
-            if (!matchSelect || !dateInput) return;
+        const bracketRounds = [
+            { key: 'r16', name: 'Octavos de Final' },
+            { key: 'qf', name: 'Cuartos de Final' },
+            { key: 'sf', name: 'Semifinales' },
+            { key: 'final', name: 'Gran Final' }
+        ];
 
-            matchSelect.innerHTML = '';
-            const matches = appData.brackets[round] || [];
-
-            if (matches.length === 0) {
-                matchSelect.innerHTML = `<option value="">No hay llaves en esta ronda</option>`;
-                dateInput.value = '';
-                return;
+        bracketRounds.forEach(round => {
+            if (filterGroup === 'ALL' || filterGroup === round.name) {
+                (window.appData.brackets[round.key] || []).forEach(m => {
+                    itemsToShow.push({
+                        tipo: 'bracket',
+                        subtitulo: round.name,
+                        p1: m.p1,
+                        p2: m.p2,
+                        label1: 'Participante 1',
+                        label2: 'Participante 2',
+                        winner: m.winner,
+                        fecha: m.fecha || ''
+                    });
+                });
             }
+        });
 
-            matches.forEach((m) => {
-                matchSelect.innerHTML += `<option value="${m.id}">${m.p1} vs ${m.p2}</option>`;
-            });
-            loadBracketDateToInput();
+        if (itemsToShow.length === 0) {
+            container.innerHTML = `<div class="col-span-2 bg-chess-card border border-chess-border p-8 rounded-2xl text-center text-gray-400">No hay enfrentamientos programados todavía.</div>`;
+            return;
         }
 
-        function loadBracketDateToInput() {
-            const round = document.getElementById('admin-bracket-sched-round').value;
-            const matchId = document.getElementById('admin-bracket-sched-match').value;
-            const dateInput = document.getElementById('admin-bracket-sched-date');
-            if (!matchId || !dateInput) return;
-
-            const match = (appData.brackets[round] || []).find(m => m.id === matchId);
-            if (match && match.fecha) {
-                dateInput.value = match.fecha;
+        itemsToShow.forEach((item, idx) => {
+            let statusBadge = `<span class="text-xs bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full border border-amber-500/30">Próximo Encuentro</span>`;
+            
+            if (item.tipo === 'grupo') {
+                if (item.result === 'WHITE') statusBadge = `<span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">Ganó Blancas</span>`;
+                if (item.result === 'BLACK') statusBadge = `<span class="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/30">Ganó Negras</span>`;
+                if (item.result === 'DRAW') statusBadge = `<span class="text-xs bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30">Tablas (Empate)</span>`;
             } else {
-                dateInput.value = '';
+                if (item.winner) statusBadge = `<span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">Ganador: ${item.winner}</span>`;
+            }
+
+            let fechaFormatted = item.fecha ? new Date(item.fecha).toLocaleString() : 'Fecha por programar';
+
+            container.innerHTML += `
+                <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-md space-y-4">
+                    <div class="flex justify-between items-center text-xs text-gray-400 border-b border-chess-border pb-3">
+                        <span class="font-bold text-amber-400">${item.subtitulo} — Encuentro #${idx + 1}</span>
+                        ${statusBadge}
+                    </div>
+                    <div class="text-xs text-gray-300 flex items-center gap-2">
+                        <i class="fa-solid fa-clock text-amber-500"></i> <span><b>Fecha Programada:</b> ${fechaFormatted}</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 items-center">
+                        <div class="bg-chess-dark p-3.5 rounded-xl border border-chess-border text-center">
+                            <span class="text-[10px] uppercase font-bold text-gray-400 block mb-1">${item.label1}</span>
+                            <span class="font-bold text-white text-sm">${item.p1}</span>
+                        </div>
+                        <div class="bg-chess-dark p-3.5 rounded-xl border border-chess-border text-center">
+                            <span class="text-[10px] uppercase font-bold text-gray-400 block mb-1">${item.label2}</span>
+                            <span class="font-bold text-white text-sm">${item.p2}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    window.populateAdminMatches = function() {
+        const group = document.getElementById('admin-res-group').value;
+        const matchSelect = document.getElementById('admin-res-match');
+        if (!matchSelect) return;
+        matchSelect.innerHTML = '';
+
+        const matches = window.appData.matches[group] || [];
+        if (matches.length === 0) {
+            matchSelect.innerHTML = `<option value="">No hay partidas en este grupo</option>`;
+            return;
+        }
+
+        matches.forEach((m) => {
+            const w = window.appData.students.find(s => s.id === m.whiteId);
+            const b = window.appData.students.find(s => s.id === m.blackId);
+            if (w && b) {
+                const statusText = m.result ? ` [Jugado]` : (m.fecha ? ` [Programado]` : '');
+                matchSelect.innerHTML += `<option value="${m.id}">[Blancas] ${w.nombre} vs [Negras] ${b.nombre}${statusText}</option>`;
+            }
+        });
+        loadMatchDateToInput();
+    }
+
+    window.loadMatchDateToInput = function() {
+        const group = document.getElementById('admin-res-group').value;
+        const matchId = document.getElementById('admin-res-match').value;
+        const dateInput = document.getElementById('admin-res-date');
+        if (!matchId || !dateInput) return;
+
+        const match = (window.appData.matches[group] || []).find(m => m.id === matchId);
+        if (match && match.fecha) {
+            dateInput.value = match.fecha;
+        } else {
+            dateInput.value = '';
+        }
+    }
+
+    window.saveMatchDateOnly = async function() {
+        const group = document.getElementById('admin-res-group').value;
+        const matchId = document.getElementById('admin-res-match').value;
+        const newDate = document.getElementById('admin-res-date').value;
+
+        if (!matchId) {
+            alert('Selecciona una partida válida.');
+            return;
+        }
+        const match = (window.appData.matches[group] || []).find(m => m.id === matchId);
+        if (!match) return;
+
+        match.fecha = newDate;
+        await saveData();
+        populateAdminMatches();
+        alert('¡Fecha y hora programadas en la nube!');
+    }
+
+    window.saveMatchResultOnly = async function() {
+        const group = document.getElementById('admin-res-group').value;
+        const matchId = document.getElementById('admin-res-match').value;
+        const outcome = document.getElementById('admin-res-outcome').value;
+
+        if (!matchId) {
+            alert('Selecciona una partida válida.');
+            return;
+        }
+        const match = (window.appData.matches[group] || []).find(m => m.id === matchId);
+        if (!match) return;
+
+        if (match.result) {
+            const wSt = window.appData.students.find(s => s.id === match.whiteId);
+            const bSt = window.appData.students.find(s => s.id === match.blackId);
+            if (wSt && bSt) {
+                wSt.pj--; bSt.pj--;
+                if (match.result === 'WHITE') { wSt.g--; wSt.pts -= 1; bSt.p--; }
+                else if (match.result === 'BLACK') { bSt.g--; bSt.pts -= 1; wSt.p--; }
+                else if (match.result === 'DRAW') { wSt.e--; wSt.pts -= 0.5; bSt.e--; bSt.pts -= 0.5; }
             }
         }
 
-        function saveBracketDate() {
-            const round = document.getElementById('admin-bracket-sched-round').value;
-            const matchId = document.getElementById('admin-bracket-sched-match').value;
-            const newDate = document.getElementById('admin-bracket-sched-date').value;
+        match.result = outcome;
+        const whiteStudent = window.appData.students.find(s => s.id === match.whiteId);
+        const blackStudent = window.appData.students.find(s => s.id === match.blackId);
 
-            if (!matchId) {
-                alert('Selecciona una llave válida.');
-                return;
+        if (whiteStudent && blackStudent) {
+            whiteStudent.pj++;
+            blackStudent.pj++;
+
+            if (outcome === 'WHITE') {
+                whiteStudent.g++; whiteStudent.pts += 1.0;
+                blackStudent.p++;
+            } else if (outcome === 'BLACK') {
+                blackStudent.g++; blackStudent.pts += 1.0;
+                whiteStudent.p++;
+            } else if (outcome === 'DRAW') {
+                whiteStudent.e++; whiteStudent.pts += 0.5;
+                blackStudent.e++; blackStudent.pts += 0.5;
             }
-            const match = (appData.brackets[round] || []).find(m => m.id === matchId);
-            if (!match) return;
-
-            match.fecha = newDate;
-            saveData();
-            populateAdminBracketSchedule();
-            alert('¡Fecha y hora programadas para la llave de eliminación con éxito!');
         }
 
-        function saveBracketWinner() {
-            const round = document.getElementById('admin-bracket-round').value;
-            const matchId = document.getElementById('admin-bracket-match').value;
-            const winnerChoice = document.getElementById('admin-bracket-winner').value;
+        await saveData();
+        populateAdminMatches();
+        alert('¡Resultado guardado en la nube y posiciones actualizadas!');
+    }
 
-            if (!matchId) {
-                alert('Selecciona una llave válida.');
-                return;
-            }
-
-            const matches = appData.brackets[round] || [];
-            const matchObj = matches.find(m => m.id === matchId);
-            if (!matchObj) return;
-
-            const winningName = winnerChoice === '1' ? matchObj.p1 : matchObj.p2;
-            matchObj.winner = winningName;
-
-            const matchIndex = matches.indexOf(matchObj);
-            if (round === 'r16') {
-                const qfIndex = Math.floor(matchIndex / 2);
-                const qfMatch = appData.brackets.qf[qfIndex];
-                if (qfMatch) {
-                    if (matchIndex % 2 === 0) qfMatch.p1 = winningName;
-                    else qfMatch.p2 = winningName;
+    window.generateBrackets = async function() {
+        for (let gKey in window.appData.matches) {
+            const matchesInGroup = window.appData.matches[gKey];
+            for (let m of matchesInGroup) {
+                if (!m.result) {
+                    alert(`Hay partidas pendientes en el ${gKey}. Deben jugarse antes de generar octavos.`);
+                    return;
                 }
-            } else if (round === 'qf') {
-                const sfIndex = Math.floor(matchIndex / 2);
-                const sfMatch = appData.brackets.sf[sfIndex];
-                if (sfMatch) {
-                    if (matchIndex % 2 === 0) sfMatch.p1 = winningName;
-                    else sfMatch.p2 = winningName;
-                }
-            } else if (round === 'sf') {
-                const finalMatch = appData.brackets.final[0];
-                if (finalMatch) {
-                    if (matchIndex === 0) finalMatch.p1 = winningName;
-                    else finalMatch.p2 = winningName;
-                }
             }
-
-            saveData();
-            renderBracketsView();
-            populateBracketMatches();
-            populateAdminBracketSchedule();
-            alert(`¡Ganador guardado! ${winningName} avanza de ronda.`);
         }
 
-        function renderBracketsView() {
-            const r16Container = document.getElementById('bracket-r16');
-            const qfContainer = document.getElementById('bracket-qf');
-            const sfContainer = document.getElementById('bracket-sf');
-            const finalContainer = document.getElementById('bracket-final');
-
-            if (!r16Container) return;
-
-            r16Container.innerHTML = '';
-            (appData.brackets.r16 || []).forEach((m, idx) => {
-                r16Container.innerHTML += `
-                    <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
-                        <div class="text-gray-400 font-bold mb-1">Octavos #${idx + 1}</div>
-                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
-                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
-                    </div>
-                `;
-            });
-
-            qfContainer.innerHTML = '';
-            (appData.brackets.qf || []).forEach((m, idx) => {
-                qfContainer.innerHTML += `
-                    <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
-                        <div class="text-amber-400 font-bold mb-1">Cuartos #${idx + 1}</div>
-                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
-                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
-                    </div>
-                `;
-            });
-
-            sfContainer.innerHTML = '';
-            (appData.brackets.sf || []).forEach((m, idx) => {
-                sfContainer.innerHTML += `
-                    <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
-                        <div class="text-amber-400 font-bold mb-1">Semifinal #${idx + 1}</div>
-                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
-                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
-                    </div>
-                `;
-            });
-
-            finalContainer.innerHTML = '';
-            (appData.brackets.final || []).forEach((m) => {
-                finalContainer.innerHTML += `
-                    <div class="bg-gradient-to-br from-amber-900/40 to-chess-dark p-4 rounded-xl border border-amber-500/40 text-xs space-y-2 text-center shadow-lg">
-                        <div class="text-amber-400 font-extrabold uppercase tracking-wide"><i class="fa-solid fa-crown mr-1"></i> Gran Final</div>
-                        <div class="text-white px-3 py-2 rounded font-semibold ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
-                        <div class="text-gray-400 font-bold">VS</div>
-                        <div class="text-white px-3 py-2 rounded font-semibold ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
-                    </div>
-                `;
-            });
-        }
-
-        function renderAdminStudents() {
-            const tbody = document.getElementById('admin-students-tbody');
-            const countEl = document.getElementById('admin-student-count');
-            if (!tbody) return;
-
-            tbody.innerHTML = '';
-            countEl.innerText = `Total: ${appData.students.length}`;
-
-            if (appData.students.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">No hay estudiantes registrados.</td></tr>`;
-                return;
+        let qualified = [];
+        for (let i = 1; i <= TOTAL_GROUPS; i++) {
+            const gName = `Grupo ${String.fromCharCode(64 + i)}`;
+            const gStudents = window.appData.students.filter(s => s.grupo === gName);
+            gStudents.sort((a, b) => b.pts - a.pts);
+            if (gStudents.length > 0) {
+                qualified.push(`${gStudents[0].nombre} ${gStudents[0].apellido}`);
             }
+        }
 
-            appData.students.forEach(st => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-chess-dark transition">
-                        <td class="p-3 font-semibold text-white">${st.nombre} ${st.apellido}</td>
-                        <td class="p-3 text-amber-400">${st.grupo}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="deleteStudent('${st.id}')" class="bg-red-500/20 text-red-400 px-3 py-1 rounded-lg text-xs hover:bg-red-500/30 transition"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
+        if (qualified.length < 2) {
+            alert('Se necesitan al menos 2 estudiantes clasificados.');
+            return;
+        }
+
+        window.appData.brackets.r16 = [];
+        for (let i = 0; i < 8; i++) {
+            window.appData.brackets.r16.push({
+                id: `r16_${i}`,
+                p1: qualified[i * 2] || 'Por definir',
+                p2: qualified[i * 2 + 1] || 'Por definir',
+                winner: null,
+                fecha: ''
             });
         }
-        function updateStatCounters() {
-            const statEl = document.getElementById('stat-students');
-            if (statEl) statEl.innerText = appData.students.length;
+
+        window.appData.brackets.qf = [ {id:'qf_0', p1:'Ganador R16 #1', p2:'Ganador R16 #2', winner:null, fecha:''}, {id:'qf_1', p1:'Ganador R16 #3', p2:'Ganador R16 #4', winner:null, fecha:''}, {id:'qf_2', p1:'Ganador R16 #5', p2:'Ganador R16 #6', winner:null, fecha:''}, {id:'qf_3', p1:'Ganador R16 #7', p2:'Ganador R16 #8', winner:null, fecha:''} ];
+        window.appData.brackets.sf = [ {id:'sf_0', p1:'Ganador QF #1', p2:'Ganador QF #2', winner:null, fecha:''}, {id:'sf_1', p1:'Ganador QF #3', p2:'Ganador QF #4', winner:null, fecha:''} ];
+        window.appData.brackets.final = [ {id:'final_0', p1:'Ganador SF #1', p2:'Ganador SF #2', winner:null, fecha:''} ];
+
+        await saveData();
+        renderBracketsView();
+        populateBracketMatches();
+        populateAdminBracketSchedule();
+        alert('¡Octavos de Final generados y guardados en la nube!');
+    }
+
+    window.populateBracketMatches = function() {
+        const round = document.getElementById('admin-bracket-round').value;
+        const matchSelect = document.getElementById('admin-bracket-match');
+        if (!matchSelect) return;
+
+        matchSelect.innerHTML = '';
+        const matches = window.appData.brackets[round] || [];
+
+        if (matches.length === 0) {
+            matchSelect.innerHTML = `<option value="">Genera los brackets primero</option>`;
+            return;
         }
 
-        // CARGA INICIAL
-        window.onload = function() {
-            initGroupSelectors();
-            updateStatCounters();
-            renderGroups();
-            renderSchedule();
-            renderBracketsView();
-        };
-    </script>
-</body>
-</html>
+        matches.forEach((m) => {
+            const wText = m.winner ? ` [Ganador: ${m.winner}]` : '';
+            matchSelect.innerHTML += `<option value="${m.id}">${m.p1} vs ${m.p2}${wText}</option>`;
+        });
+    }
+
+    window.populateAdminBracketSchedule = function() {
+        const round = document.getElementById('admin-bracket-sched-round').value;
+        const matchSelect = document.getElementById('admin-bracket-sched-match');
+        const dateInput = document.getElementById('admin-bracket-sched-date');
+        if (!matchSelect || !dateInput) return;
+
+        matchSelect.innerHTML = '';
+        const matches = window.appData.brackets[round] || [];
+
+        if (matches.length === 0) {
+            matchSelect.innerHTML = `<option value="">No hay llaves en esta ronda</option>`;
+            dateInput.value = '';
+            return;
+        }
+
+        matches.forEach((m) => {
+            matchSelect.innerHTML += `<option value="${m.id}">${m.p1} vs ${m.p2}</option>`;
+        });
+        loadBracketDateToInput();
+    }
+
+    window.loadBracketDateToInput = function() {
+        const round = document.getElementById('admin-bracket-sched-round').value;
+        const matchId = document.getElementById('admin-bracket-sched-match').value;
+        const dateInput = document.getElementById('admin-bracket-sched-date');
+        if (!matchId || !dateInput) return;
+
+        const match = (window.appData.brackets[round] || []).find(m => m.id === matchId);
+        if (match && match.fecha) {
+            dateInput.value = match.fecha;
+        } else {
+            dateInput.value = '';
+        }
+    }
+
+    window.saveBracketDate = async function() {
+        const round = document.getElementById('admin-bracket-sched-round').value;
+        const matchId = document.getElementById('admin-bracket-sched-match').value;
+        const newDate = document.getElementById('admin-bracket-sched-date').value;
+
+        if (!matchId) {
+            alert('Selecciona una llave válida.');
+            return;
+        }
+        const match = (window.appData.brackets[round] || []).find(m => m.id === matchId);
+        if (!match) return;
+
+        match.fecha = newDate;
+        await saveData();
+        populateAdminBracketSchedule();
+        alert('¡Fecha de llave guardada en la nube!');
+    }
+
+    window.saveBracketWinner = async function() {
+        const round = document.getElementById('admin-bracket-round').value;
+        const matchId = document.getElementById('admin-bracket-match').value;
+        const winnerChoice = document.getElementById('admin-bracket-winner').value;
+
+        if (!matchId) {
+            alert('Selecciona una llave válida.');
+            return;
+        }
+
+        const matches = window.appData.brackets[round] || [];
+        const matchObj = matches.find(m => m.id === matchId);
+        if (!matchObj) return;
+
+        const winningName = winnerChoice === '1' ? matchObj.p1 : matchObj.p2;
+        matchObj.winner = winningName;
+
+        const matchIndex = matches.indexOf(matchObj);
+        if (round === 'r16') {
+            const qfIndex = Math.floor(matchIndex / 2);
+            const qfMatch = window.appData.brackets.qf[qfIndex];
+            if (qfMatch) {
+                if (matchIndex % 2 === 0) qfMatch.p1 = winningName;
+                else qfMatch.p2 = winningName;
+            }
+        } else if (round === 'qf') {
+            const sfIndex = Math.floor(matchIndex / 2);
+            const sfMatch = window.appData.brackets.sf[sfIndex];
+            if (sfMatch) {
+                if (matchIndex % 2 === 0) sfMatch.p1 = winningName;
+                else sfMatch.p2 = winningName;
+            }
+        } else if (round === 'sf') {
+            const finalMatch = window.appData.brackets.final[0];
+            if (finalMatch) {
+                if (matchIndex === 0) finalMatch.p1 = winningName;
+                else finalMatch.p2 = winningName;
+            }
+        }
+
+        await saveData();
+        renderBracketsView();
+        populateBracketMatches();
+        populateAdminBracketSchedule();
+        alert(`¡Ganador guardado en la nube! ${winningName} avanza.`);
+    }
+
+    window.renderBracketsView = function() {
+        const r16Container = document.getElementById('bracket-r16');
+        const qfContainer = document.getElementById('bracket-qf');
+        const sfContainer = document.getElementById('bracket-sf');
+        const finalContainer = document.getElementById('bracket-final');
+
+        if (!r16Container) return;
+
+        r16Container.innerHTML = '';
+        (window.appData.brackets.r16 || []).forEach((m, idx) => {
+            r16Container.innerHTML += `
+                <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
+                    <div class="text-gray-400 font-bold mb-1">Octavos #${idx + 1}</div>
+                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
+                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                </div>
+            `;
+        });
+
+        qfContainer.innerHTML = '';
+        (window.appData.brackets.qf || []).forEach((m, idx) => {
+            qfContainer.innerHTML += `
+                <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
+                    <div class="text-amber-400 font-bold mb-1">Cuartos #${idx + 1}</div>
+                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
+                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                </div>
+            `;
+        });
+
+        sfContainer.innerHTML = '';
+        (window.appData.brackets.sf || []).forEach((m, idx) => {
+            sfContainer.innerHTML += `
+                <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
+                    <div class="text-amber-400 font-bold mb-1">Semifinal #${idx + 1}</div>
+                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
+                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                </div>
+            `;
+        });
+
+        finalContainer.innerHTML = '';
+        (window.appData.brackets.final || []).forEach((m) => {
+            finalContainer.innerHTML += `
+                <div class="bg-gradient-to-br from-amber-900/40 to-chess-dark p-4 rounded-xl border border-amber-500/40 text-xs space-y-2 text-center shadow-lg">
+                    <div class="text-amber-400 font-extrabold uppercase tracking-wide"><i class="fa-solid fa-crown mr-1"></i> Gran Final</div>
+                    <div class="text-white px-3 py-2 rounded font-semibold ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
+                    <div class="text-gray-400 font-bold">VS</div>
+                    <div class="text-white px-3 py-2 rounded font-semibold ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                </div>
+            `;
+        });
+    }
+
+    window.renderAdminStudents = function() {
+        const tbody = document.getElementById('admin-students-tbody');
+        const countEl = document.getElementById('admin-student-count');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+        countEl.innerText = `Total: ${window.appData.students.length}`;
+
+        if (window.appData.students.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">No hay estudiantes registrados.</td></tr>`;
+            return;
+        }
+
+        window.appData.students.forEach(st => {
+            tbody.innerHTML += `
+                <tr class="hover:bg-chess-dark transition">
+                    <td class="p-3 font-semibold text-white">${st.nombre} ${st.apellido}</td>
+                    <td class="p-3 text-amber-400">${st.grupo}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteStudent('${st.id}')" class="bg-red-500/20 text-red-400 px-3 py-1 rounded-lg text-xs hover:bg-red-500/30 transition"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    window.updateStatCounters = function() {
+        const statEl = document.getElementById('stat-students');
+        if (statEl) statEl.innerText = window.appData.students.length;
+    }
+
+    // CARGA INICIAL DESDE LA NUBE
+    window.onload = function() {
+        loadDataFromCloud();
+    };
+</script>
