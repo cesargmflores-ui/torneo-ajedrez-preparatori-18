@@ -1,0 +1,40 @@
+/* Estilos personalizados complementarios para el Torneo de Ajedrez Escolar */
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Personalización de la barra de desplazamiento */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #121214;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2f2f3a;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d97706;
+}
+
+/* Efectos de transición suaves para tarjetas y elementos interactivos */
+.bg-chess-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bg-chess-card:hover {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+/* Ajustes responsivos adicionales */
+@media (max-width: 768px) {
+    header nav {
+        justify-content: center;
+    }
+}

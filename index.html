@@ -1,0 +1,1181 @@
+<!--Graficos = Super-ultrapromax-->
+<!--Rendimiento = Todo-->
+<!--Hackers = Ninguno(El que hacke es joto)-->
+<!--Funcionando al 100-->
+<!--Todo al 100-->
+<!--Este codigo esta funcionando gracias a 20 padres nuestros, 13 aves maria y un sacricifio-->
+<!--Cualquier modificacion sera bajo su propio riesgo ya que no se sabe como funciona este codigo-->
+<!--Att: Grupo 501 :) -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneo de Ajedrez Escolar</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        chess: {
+                            darker: '#121214',
+                            dark: '#18181b',
+                            card: '#202024',
+                            border: '#27272a',
+                            accent: '#f59e0b',
+                            hover: '#d97706'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-chess-darker text-gray-100 min-h-screen font-sans flex flex-col justify-between">
+
+    <!-- HEADER / NAVEGACIÓN -->
+    <header class="bg-chess-dark border-b border-chess-border sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="bg-amber-500 text-chess-darker p-2.5 rounded-xl font-bold text-xl shadow">
+                    <i class="fa-solid fa-chess-knight"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg tracking-wide text-white">TORNEO DE AJEDREZ</h1>
+                    <p class="text-xs text-gray-400">Sistema Oficial de Competencia</p>
+                </div>
+            </div>
+
+            <!-- Navegación por Pestañas -->
+            <nav class="flex flex-wrap gap-1.5 justify-center bg-chess-card p-1.5 rounded-xl border border-chess-border">
+                <button onclick="switchTab('home')" id="btn-home" class="px-4 py-2 rounded-lg text-sm font-semibold transition bg-chess-accent text-chess-darker shadow">Inicio</button>
+                <button onclick="switchTab('groups')" id="btn-groups" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Grupos</button>
+                <button onclick="switchTab('schedule')" id="btn-schedule" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Calendario</button>
+                <button onclick="switchTab('brackets')" id="btn-brackets" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Eliminatorias</button>
+                <button onclick="switchTab('rules')" id="btn-rules" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Reglas</button>
+                <!-- NUEVO BOTÓN: CRÉDITOS -->
+                <button onclick="switchTab('credits')" id="btn-credits" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border"><i class="fa-solid fa-users-gear mr-1"></i> Créditos</button>
+                <button onclick="switchTab('admin')" id="btn-admin" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border"><i class="fa-solid fa-lock mr-1"></i> Admin</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- PESTAÑA: INICIO -->
+        <section id="tab-home" class="space-y-8">
+            <div class="bg-gradient-to-r from-amber-600/20 via-chess-card to-chess-card border border-chess-border p-8 md:p-12 rounded-3xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="space-y-4 max-w-2xl">
+                    <span class="bg-amber-500/10 text-amber-400 text-xs font-bold px-3 py-1 rounded-full border border-amber-500/30 uppercase tracking-wider">Temporada Oficial</span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-white leading-tight">Campeonato Escolar de Ajedrez Preparatoria #18</h2>
+                    <p class="text-gray-300 text-sm md:text-base leading-relaxed">Demuestra tu estrategia en el tablero. Participa en la fase de grupos y busca tu pase a la gran eliminatoria directa hacia el campeonato.</p>
+                    <div class="flex gap-4 pt-2">
+                        <button onclick="switchTab('groups')" class="bg-amber-500 hover:bg-amber-600 text-chess-darker font-bold px-6 py-3 rounded-xl transition shadow-lg">Ver Posiciones</button>
+                        <button onclick="switchTab('schedule')" class="bg-chess-border hover:bg-gray-700 text-white font-bold px-6 py-3 rounded-xl transition">Ver Calendario</button>
+                    </div>
+                </div>
+                <div class="bg-chess-dark p-6 rounded-2xl border border-chess-border text-center shadow-inner w-full md:w-72 space-y-3">
+                    <i class="fa-solid fa-users text-4xl text-amber-500"></i>
+                    <h3 class="text-gray-300 font-semibold text-sm">Estudiantes Inscritos</h3>
+                    <p id="stat-students" class="text-3xl font-extrabold text-white">0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑA: GRUPOS -->
+        <section id="tab-groups" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-chess-card p-6 rounded-2xl border border-chess-border">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-ranking-star text-amber-500"></i> Tablas de Posiciones</h2>
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <label class="text-xs font-bold text-gray-400 uppercase">Seleccionar Grupo:</label>
+                    <select id="group-select" onchange="renderGroups()" class="bg-chess-dark border border-chess-border rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-amber-500 w-full md:w-48">
+                        <!-- Dinámico -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-chess-card border border-chess-border rounded-2xl overflow-hidden shadow-xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-chess-dark text-gray-400 uppercase text-xs border-b border-chess-border">
+                                <th class="p-4 font-bold">#</th>
+                                <th class="p-4 font-bold">Estudiante</th>
+                                <th class="p-4 font-bold text-center">PJ</th>
+                                <th class="p-4 font-bold text-center">G</th>
+                                <th class="p-4 font-bold text-center">E</th>
+                                <th class="p-4 font-bold text-center">P</th>
+                                <th class="p-4 font-bold text-center">Pts</th>
+                                <th class="p-4 font-bold text-center">Tendencia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="group-table-body" class="divide-y divide-chess-border">
+                            <!-- Dinámico -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑA: CALENDARIO -->
+        <section id="tab-schedule" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-chess-card p-6 rounded-2xl border border-chess-border">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-calendar-days text-amber-500"></i> Calendario de Enfrentamientos</h2>
+                    <p class="text-xs text-gray-400">Consulta las fechas programadas y resultados de grupos y eliminatorias</p>
+                </div>
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <label class="text-xs font-bold text-gray-400 uppercase">Filtrar:</label>
+                    <select id="schedule-filter-group" onchange="renderSchedule()" class="bg-chess-dark border border-chess-border rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-amber-500 w-full md:w-60">
+                        <!-- Dinámico -->
+                    </select>
+                </div>
+            </div>
+
+            <div id="schedule-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dinámico -->
+            </div>
+        </section>
+
+        <!-- PESTAÑA: ELIMINATORIAS (BRACKETS) -->
+        <section id="tab-brackets" class="hidden space-y-6">
+            <div class="bg-chess-card p-6 rounded-2xl border border-chess-border text-center space-y-2">
+                <h2 class="text-2xl font-bold text-white flex items-center justify-center gap-2"><i class="fa-solid fa-sitemap text-amber-500"></i> Fase de Eliminación Directa</h2>
+                <p class="text-sm text-gray-400">Camino hacia el campeonato escolar de ajedrez</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Octavos -->
+                <div class="space-y-4">
+                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-400 text-sm">Octavos de Final</div>
+                    <div id="bracket-r16" class="space-y-3"></div>
+                </div>
+                <!-- Cuartos -->
+                <div class="space-y-4">
+                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-400 text-sm">Cuartos de Final</div>
+                    <div id="bracket-qf" class="space-y-3"></div>
+                </div>
+                <!-- Semifinales -->
+                <div class="space-y-4">
+                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-400 text-sm">Semifinales</div>
+                    <div id="bracket-sf" class="space-y-3"></div>
+                </div>
+                <!-- Final -->
+                <div class="space-y-4">
+                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-400 text-sm">Gran Final</div>
+                    <div id="bracket-final" class="space-y-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑA: REGLAS -->
+        <section id="tab-rules" class="hidden space-y-6">
+            <div class="bg-chess-card border border-chess-border p-8 rounded-3xl space-y-6">
+                <h2 class="text-2xl font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-book-open"></i> Reglamento del Torneo</h2>
+                <ul class="list-disc list-inside space-y-3 text-gray-300 text-sm leading-relaxed">
+                    <li><b>Sistema de Puntuación:</b> Victoria = 1 punto, Tablas (Empate) = 0.5 puntos, Derrota = 0 puntos.</li>
+                    <li><b>Fase de Grupos:</b> Todos contra todos dentro de su grupo correspondiente.</li>
+                    <li><b>Clasificación:</b> Los primeros lugares de cada grupo avanzan a la fase de Octavos de Final.</li>
+                    <li><b>Puntualidad:</b> Se dará un tiempo de tolerancia de 10 minutos antes de declarar default.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- NUEVA PESTAÑA: CRÉDITOS DEL EQUIPO -->
+        <section id="tab-credits" class="hidden space-y-6">
+            <div class="bg-chess-card border border-chess-border p-8 rounded-3xl space-y-6 shadow-xl">
+                <div class="text-center space-y-2">
+                    <h2 class="text-2xl font-bold text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-users-gear"></i> Créditos y Estructura Organizacional</h2>
+                    <p class="text-sm text-gray-400">Equipo de trabajo encargado del desarrollo y gestión del proyecto Grupo 501</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+                    <!-- Dirección y Desarrollo Técnico -->
+                    <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Dirección y Desarrollo Técnico</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li>• <b>Luis Alonso Garza Luna</b> — <span class="text-gray-400">Tutor / Asesor Académico</span></li>
+                            <li>• <b>Cesar Gabriel Muñiz Flores</b> — <span class="text-gray-400">Programador Principal / Desarrollador Líder</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Equipo de Desarrollo y Programación -->
+                    <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Desarrollo y Programación</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li>• <b>Jesus Alejandro Bautista Luna</b> — <span class="text-gray-400">Desarrollador Junior / Soporte</span></li>
+                            <li>• <b>Yahir Carrillo Gonzales</b> — <span class="text-gray-400">Desarrollador Junior / Soporte</span></li>
+                            <li>• <b>Rolando Castillo Aparicio</b> — <span class="text-gray-400">Desarrollador Junior / Soporte</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Bases de Datos y Gestión de Información -->
+                    <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Bases de Datos y Gestión</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li>• <b>Jose Manuel Galvan Rodriguez</b> — <span class="text-gray-400">Administrador de Base de Datos</span></li>
+                            <li>• <b>Ana Karla Gamez Arrieta</b> — <span class="text-gray-400">Gestor de Datos y Registros</span></li>
+                            <li>• <b>Ismael Garcia Ibarra</b> — <span class="text-gray-400">Gestor de Datos y Registros</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Control de Calidad y Pruebas (QA) -->
+                    <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Control de Calidad (QA)</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li>• <b>Lazaro Jonas Garza Escobedo</b> — <span class="text-gray-400">Analista de Control de Calidad (QA)</span></li>
+                            <li>• <b>Jose Roberto Hernandez Salazar</b> — <span class="text-gray-400">Analista de Control de Calidad (QA)</span></li>
+                            <li>• <b>Estefani Arali Ibañez Grimaldo</b> — <span class="text-gray-400">Analista de Control de Calidad (QA)</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Documentación y Análisis de Requerimientos -->
+                    <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Documentación y Análisis</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li>• <b>Diego Aldair Ibarra Barron</b> — <span class="text-gray-400">Analista de Requerimientos y Documentación</span></li>
+                            <li>• <b>Alan Artemio Ibarra Nava</b> — <span class="text-gray-400">Analista de Requerimientos y Documentación</span></li>
+                            <li>• <b>Fernando Gael Jimenez Elizondo</b> — <span class="text-gray-400">Analista de Requerimientos y Documentación</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Logística, Operaciones y Coordinación -->
+                    <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Logística y Coordinación</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li>• <b>Ariana Sarai Lozano Carranza</b> — <span class="text-gray-400">Coordinador de Logística</span></li>
+                            <li>• <b>Zayra Yaneth Martinez Hilario</b> — <span class="text-gray-400">Coordinador de Logística</span></li>
+                            <li>• <b>Agel Francisco Medina Saldaña</b> — <span class="text-gray-400">Coordinador de Logística</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Diseño, Interfaz y Experiencia de Usuario (UI/UX) -->
+                    <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Diseño UI / UX</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li>• <b>Natalie Ximena Moreno Lopez</b> — <span class="text-gray-400">Diseñador UI / UX</span></li>
+                            <li>• <b>Angel Gabriel Peña Cerrato</b> — <span class="text-gray-400">Diseñador UI / UX</span></li>
+                            <li>• <b>Osvaldo Gabriel Rodriguez Espinoza</b> — <span class="text-gray-400">Diseñador UI / UX</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Soporte de Infraestructura y Despliegue -->
+                    <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Infraestructura y Despliegue</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li>• <b>Brayan Emiliano Rodriguez Quintero</b> — <span class="text-gray-400">Especialista en Infraestructura</span></li>
+                            <li>• <b>Vicente Rafael Rubio Maldonado</b> — <span class="text-gray-400">Especialista en Infraestructura</span></li>
+                            <li>• <b>Eddy Fernando Sanchez Gonzales</b> — <span class="text-gray-400">Especialista en Infraestructura</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Validación e Integración de Sistemas -->
+                    <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Validación e Integración</h3>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li>• <b>Gerardo Sanchez Lopez</b> — <span class="text-gray-400">Analista de Integración</span></li>
+                            <li>• <b>Dante Gael Villarreal Flores</b> — <span class="text-gray-400">Analista de Integración</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PESTAÑA: ADMIN -->
+        <section id="tab-admin" class="hidden space-y-8">
+            <!-- Login Box -->
+            <div id="admin-auth-box" class="max-w-md mx-auto bg-chess-card border border-chess-border p-8 rounded-3xl shadow-xl space-y-6">
+                <div class="text-center space-y-2">
+                    <div class="bg-amber-500/10 text-amber-400 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto border border-amber-500/30 text-xl"><i class="fa-solid fa-lock"></i></div>
+                    <h2 class="text-xl font-bold text-white">Acceso de Administrador</h2>
+                    <p class="text-xs text-gray-400">Ingresa la contraseña para gestionar el torneo</p>
+                </div>
+                <form onsubmit="authenticateAdmin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Contraseña</label>
+                        <input type="password" id="admin-pass-input" placeholder="••••••••" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500" required>
+                    </div>
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-chess-darker font-bold py-3 rounded-xl transition shadow">Ingresar al Panel</button>
+                </form>
+            </div>
+
+            <!-- Dashboard Admin -->
+            <div id="admin-dashboard" class="hidden space-y-8">
+                <div class="flex justify-between items-center bg-chess-card p-6 rounded-2xl border border-chess-border flex-wrap gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Panel de Administración</h2>
+                        <p class="text-xs text-gray-400">Gestión completa de estudiantes, fechas y resultados</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <!-- NUEVO BOTÓN: REINICIAR TORNEO -->
+                        <button onclick="reiniciarTorneo()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5">
+                            <i class="fa-solid fa-rotate-right"></i> Reiniciar Torneo
+                        </button>
+                        <button onclick="logoutAdmin()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-xl text-xs font-bold transition border border-red-500/30">Cerrar Sesión</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Registrar Estudiante -->
+                    <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-lg space-y-4">
+                        <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-user-plus"></i> Registrar Estudiante</h3>
+                        <form onsubmit="registerStudent(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Nombre(s)</label>
+                                <input type="text" id="reg-nombre" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Apellido(s)</label>
+                                <input type="text" id="reg-apellido" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Grupo Asignado</label>
+                                <select id="reg-grupo" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                                    <!-- Dinámico -->
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-chess-darker font-bold py-2.5 rounded-xl transition text-sm shadow">Guardar e Inscribir</button>
+                        </form>
+                    </div>
+
+                    <!-- Lista de Estudiantes Inscritos -->
+                    <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-lg space-y-4 flex flex-col">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-users-rectangle"></i> Estudiantes Registrados</h3>
+                            <span id="admin-student-count" class="text-xs bg-chess-dark px-3 py-1 rounded-full text-gray-300 border border-chess-border font-bold">Total: 0</span>
+                        </div>
+                        <div class="bg-chess-dark border border-chess-border rounded-xl overflow-y-auto max-h-72 flex-grow">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-chess-card text-gray-400 sticky top-0 border-b border-chess-border">
+                                    <tr>
+                                        <th class="p-3">Nombre</th>
+                                        <th class="p-3">Grupo</th>
+                                        <th class="p-3 text-center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-students-tbody" class="divide-y divide-chess-border">
+                                    <!-- Dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actualizar Resultados y Fechas (Grupos) -->
+                <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-lg space-y-4">
+                    <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Gestión de Fase de Grupos (Fechas y Resultados)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Grupo</label>
+                            <select id="admin-res-group" onchange="populateAdminMatches()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                                <!-- Dinámico -->
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Partida</label>
+                            <select id="admin-res-match" onchange="loadMatchDateToInput()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                                <!-- Dinámico -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-chess-border pt-4">
+                        <!-- Programar Fecha Independiente -->
+                        <div class="space-y-3">
+                            <label class="block text-xs font-semibold text-amber-400 uppercase">1. Programar Fecha y Hora (Antes de jugar)</label>
+                            <input type="datetime-local" id="admin-res-date" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <button onclick="saveMatchDateOnly()" class="w-full bg-chess-border hover:bg-gray-700 text-white font-semibold py-2 rounded-xl transition text-sm">Guardar Solo Fecha</button>
+                        </div>
+                        <!-- Registrar Resultado -->
+                        <div class="space-y-3">
+                            <label class="block text-xs font-semibold text-emerald-400 uppercase">2. Registrar Resultado (Cuando finalice)</label>
+                            <select id="admin-res-outcome" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                                <option value="WHITE">Gana Blancas (1 - 0)</option>
+                                <option value="BLACK">Gana Negras (0 - 1)</option>
+                                <option value="DRAW">Tablas / Empate (0.5)</option>
+                            </select>
+                            <button onclick="saveMatchResultOnly()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-xl transition text-sm">Guardar Resultado y Puntos</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brackets Admin (Fechas y Ganadores) -->
+                <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-lg space-y-4">
+                    <div class="flex justify-between items-center flex-wrap gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-sitemap"></i> Gestión de Eliminación Directa (Octavos, Cuartos, etc.)</h3>
+                            <p class="text-sm text-gray-400">Genera llaves, programa sus fechas y avanza ganadores</p>
+                        </div>
+                        <button onclick="generateBrackets()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-xl transition shadow text-sm">Generar / Reiniciar Octavos</button>
+                    </div>
+
+                    <!-- Programar Fecha de Llaves -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-chess-border">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Ronda (Fecha)</label>
+                            <select id="admin-bracket-sched-round" onchange="populateAdminBracketSchedule()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                                <option value="r16">Octavos de Final</option>
+                                <option value="qf">Cuartos de Final</option>
+                                <option value="sf">Semifinales</option>
+                                <option value="final">Gran Final</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Llave</label>
+                            <select id="admin-bracket-sched-match" onchange="loadBracketDateToInput()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                                <!-- Dinámico -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Fecha y Hora</label>
+                            <input type="datetime-local" id="admin-bracket-sched-date" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-amber-500 mb-2">
+                            <button onclick="saveBracketDate()" class="w-full bg-chess-border hover:bg-gray-700 text-white text-xs font-bold py-2 rounded-lg transition">Guardar Fecha de Llave</button>
+                        </div>
+                    </div>
+
+                    <!-- Avanzar Ganadores -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-chess-border">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Ronda (Ganador)</label>
+                            <select id="admin-bracket-round" onchange="populateBracketMatches()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                                <option value="r16">Octavos de Final</option>
+                                <option value="qf">Cuartos de Final</option>
+                                <option value="sf">Semifinales</option>
+                                <option value="final">Gran Final</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Llave / Enfrentamiento</label>
+                            <select id="admin-bracket-match" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                                <!-- Dinámico -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Ganador de la Llave</label>
+                            <select id="admin-bracket-winner" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 mb-2">
+                                <option value="1">Participante 1</option>
+                                <option value="2">Participante 2</option>
+                            </select>
+                            <button onclick="saveBracketWinner()" class="w-full bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-2 rounded-lg transition">Avanzar Ganador</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-chess-dark border-t border-chess-border py-6 mt-12 text-center text-xs text-gray-400">
+        <p>Sistema de Gestión de Torneo de Ajedrez Escolar &copy; 2026</p>
+    </footer>
+
+    <!-- LÓGICA JAVASCRIPT -->
+    <script>
+        // ESTADO GLOBAL Y PERSISTENCIA EN LOCALSTORAGE
+        let appData = JSON.parse(localStorage.getItem('chess_tournament_data')) || {
+            students: [], 
+            matches: {},  
+            brackets: { r16: [], qf: [], sf: [], final: [] }
+        };
+
+        const TOTAL_GROUPS = 16;
+
+        function saveData() {
+            localStorage.setItem('chess_tournament_data', JSON.stringify(appData));
+        }
+
+        // FUNCIÓN: REINICIAR TORNEO (LIMPIA BRACKETS Y CALENDARIO/FECHAS DE ELIMINATORIAS)
+        function reiniciarTorneo() {
+            if (!confirm('¿Estás seguro de reiniciar el torneo? Esto borrará todos los brackets generados, los ganadores de las llaves y las fechas programadas de la fase eliminatoria (los estudiantes y puntos de grupos se mantendrán).')) {
+                return;
+            }
+
+            // Limpiar brackets por completo
+            appData.brackets = { r16: [], qf: [], sf: [], final: [] };
+
+            saveData();
+            renderSchedule();
+            renderBracketsView();
+            populateBracketMatches();
+            populateAdminBracketSchedule();
+
+            alert('¡El torneo se ha reiniciado con éxito! Se han eliminado los brackets y el calendario de eliminatorias.');
+        }
+
+        // INICIALIZACIÓN DE SELECTS DE GRUPOS
+        function initGroupSelectors() {
+            const selects = ['group-select', 'reg-grupo', 'schedule-filter-group', 'admin-res-group'];
+            selects.forEach(selId => {
+                const el = document.getElementById(selId);
+                if (!el) return;
+                const currentVal = el.value;
+                el.innerHTML = '';
+                if (selId === 'schedule-filter-group') {
+                    el.innerHTML = '<option value="ALL">Todos los grupos y fases</option>';
+                }
+                for (let i = 1; i <= TOTAL_GROUPS; i++) {
+                    const groupName = `Grupo ${String.fromCharCode(64 + i)}`;
+                    el.innerHTML += `<option value="${groupName}">${groupName}</option>`;
+                }
+                if (currentVal) el.value = currentVal;
+            });
+        }
+
+        // NAVEGACIÓN ENTRE PESTAÑAS (INCLUYENDO 'credits')
+        function switchTab(tabId) {
+            const tabs = ['home', 'rules', 'groups', 'schedule', 'brackets', 'credits', 'admin'];
+            tabs.forEach(t => {
+                const tabEl = document.getElementById(`tab-${t}`);
+                if (tabEl) tabEl.classList.add('hidden');
+                const btn = document.getElementById(`btn-${t}`);
+                if (btn) {
+                    btn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border";
+                }
+            });
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            if (targetTab) targetTab.classList.remove('hidden');
+            
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            if (activeBtn) {
+                if (tabId === 'admin' || tabId === 'credits') {
+                    activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-amber-500 text-chess-darker shadow";
+                } else {
+                    activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-chess-accent text-chess-darker shadow";
+                }
+            }
+
+            if (tabId === 'groups') renderGroups();
+            if (tabId === 'schedule') renderSchedule();
+            if (tabId === 'brackets') renderBracketsView();
+            if (tabId === 'admin') {
+                if (sessionStorage.getItem('admin_auth') === 'true') {
+                    document.getElementById('admin-auth-box').classList.add('hidden');
+                    document.getElementById('admin-dashboard').classList.remove('hidden');
+                    renderAdminStudents();
+                    populateAdminMatches();
+                    populateBracketMatches();
+                    populateAdminBracketSchedule();
+                }
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // AUTENTICACIÓN ADMIN
+        function authenticateAdmin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('admin-pass-input').value;
+            if (pass === 'Puro501chingonyelprofealonsotambien') {
+                sessionStorage.setItem('admin_auth', 'true');
+                document.getElementById('admin-auth-box').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                renderAdminStudents();
+                populateAdminMatches();
+                populateBracketMatches();
+                populateAdminBracketSchedule();
+            } else {
+                alert('Contraseña incorrecta.');
+            }
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('admin_auth');
+            document.getElementById('admin-auth-box').classList.remove('hidden');
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            document.getElementById('admin-pass-input').value = '';
+        }
+
+        // REGISTRAR ESTUDIANTE Y REGENERAR ENFRENTAMIENTOS
+        function registerStudent(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('reg-nombre').value.trim();
+            const apellido = document.getElementById('reg-apellido').value.trim();
+            const grupo = document.getElementById('reg-grupo').value;
+
+            const newStudent = {
+                id: 'stu_' + Date.now() + Math.random().toString(36).substr(2, 5),
+                nombre,
+                apellido,
+                grupo,
+                pj: 0, g: 0, e: 0, p: 0, pts: 0
+            };
+
+            appData.students.push(newStudent);
+            regenerateGroupMatches(grupo);
+            saveData();
+
+            document.getElementById('reg-nombre').value = '';
+            document.getElementById('reg-apellido').value = '';
+            updateStatCounters();
+            renderAdminStudents();
+            populateAdminMatches();
+            alert(`¡Estudiante ${nombre} ${apellido} registrado con éxito en el ${grupo}!`);
+        }
+
+        // ELIMINAR ESTUDIANTE
+        function deleteStudent(studentId) {
+            if (!confirm('¿Estás seguro de eliminar a este estudiante? Se limpiarán sus puntos y enfrentamientos.')) return;
+            
+            const student = appData.students.find(s => s.id === studentId);
+            if (student) {
+                for (let gKey in appData.matches) {
+                    appData.matches[gKey].forEach(m => {
+                        if ((m.whiteId === studentId || m.blackId === studentId) && m.result) {
+                            const rivalId = m.whiteId === studentId ? m.blackId : m.whiteId;
+                            const rival = appData.students.find(s => s.id === rivalId);
+                            if (rival) {
+                                rival.pj--;
+                                if (m.result === 'DRAW') { rival.e--; rival.pts -= 0.5; }
+                                else if ((m.result === 'WHITE' && m.whiteId === rivalId) || (m.result === 'BLACK' && m.blackId === rivalId)) {
+                                    rival.g--; rival.pts -= 1.0;
+                                } else {
+                                    rival.p--;
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            appData.students = appData.students.filter(s => s.id !== studentId);
+            for (let gKey in appData.matches) {
+                appData.matches[gKey] = appData.matches[gKey].filter(m => m.whiteId !== studentId && m.blackId !== studentId);
+            }
+
+            saveData();
+            updateStatCounters();
+            renderAdminStudents();
+            populateAdminMatches();
+            alert('Estudiante eliminado y datos sincronizados correctamente.');
+        }
+
+        // REGENERAR EMPAREJAMIENTOS CON BALANCE DE PIEZAS
+        function regenerateGroupMatches(grupo) {
+            const groupStudents = appData.students.filter(s => s.grupo === grupo);
+            appData.matches[grupo] = [];
+
+            if (groupStudents.length < 2) return;
+
+            for (let i = 0; i < groupStudents.length; i++) {
+                for (let j = i + 1; j < groupStudents.length; j++) {
+                    const s1 = groupStudents[i];
+                    const s2 = groupStudents[j];
+                    const white = (i + j) % 2 === 0 ? s1 : s2;
+                    const black = (i + j) % 2 === 0 ? s2 : s1;
+
+                    appData.matches[grupo].push({
+                        id: `match_${grupo}_${i}_${j}_${Date.now()}`,
+                        whiteId: white.id,
+                        blackId: black.id,
+                        result: null,
+                        fecha: ''
+                    });
+                }
+            }
+        }
+
+        // RENDERIZAR TABLA DE POSICIONES DE GRUPOS
+        function renderGroups() {
+            const group = document.getElementById('group-select').value;
+            const groupStudents = appData.students.filter(s => s.grupo === group);
+
+            groupStudents.sort((a, b) => b.pts - a.pts);
+
+            const tbody = document.getElementById('group-table-body');
+            tbody.innerHTML = '';
+
+            if (groupStudents.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-gray-400">No hay estudiantes registrados en este grupo.</td></tr>`;
+                return;
+            }
+
+            groupStudents.forEach((st, idx) => {
+                let trendIcon = `<span class="text-gray-500">—</span>`;
+                if (idx === 0 && groupStudents.length > 1) trendIcon = `<span class="text-emerald-400 font-bold">▲ Arriba</span>`;
+                else if (idx === groupStudents.length - 1 && groupStudents.length > 1) trendIcon = `<span class="text-rose-400 font-bold">▼ Abajo</span>`;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-chess-dark transition">
+                        <td class="p-4 font-bold text-amber-400">${idx + 1}</td>
+                        <td class="p-4 font-semibold text-white">${st.nombre} ${st.apellido}</td>
+                        <td class="p-4 text-center">${st.pj}</td>
+                        <td class="p-4 text-center text-emerald-400">${st.g}</td>
+                        <td class="p-4 text-center text-amber-400">${st.e}</td>
+                        <td class="p-4 text-center text-rose-400">${st.p}</td>
+                        <td class="p-4 text-center font-bold text-amber-400">${st.pts}</td>
+                        <td class="p-4 text-center text-xs">${trendIcon}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // RENDERIZAR CALENDARIO (INCLUYE GRUPOS Y BRACKETS)
+        function renderSchedule() {
+            const filterGroup = document.getElementById('schedule-filter-group').value;
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = '';
+
+            let itemsToShow = [];
+
+            // 1. Añadir partidos de grupos
+            for (let gKey in appData.matches) {
+                if (filterGroup === 'ALL' || filterGroup === gKey) {
+                    appData.matches[gKey].forEach(m => {
+                        const whiteStudent = appData.students.find(s => s.id === m.whiteId);
+                        const blackStudent = appData.students.find(s => s.id === m.blackId);
+                        if (whiteStudent && blackStudent) {
+                            itemsToShow.push({
+                                tipo: 'grupo',
+                                subtitulo: `${gKey}`,
+                                p1: `${whiteStudent.nombre} ${whiteStudent.apellido}`,
+                                p2: `${blackStudent.nombre} ${blackStudent.apellido}`,
+                                label1: 'Blancas',
+                                label2: 'Negras',
+                                result: m.result,
+                                fecha: m.fecha
+                            });
+                        }
+                    });
+                }
+            }
+
+            // 2. Añadir partidos de Eliminación Directa (Brackets)
+            const bracketRounds = [
+                { key: 'r16', name: 'Octavos de Final' },
+                { key: 'qf', name: 'Cuartos de Final' },
+                { key: 'sf', name: 'Semifinales' },
+                { key: 'final', name: 'Gran Final' }
+            ];
+
+            bracketRounds.forEach(round => {
+                if (filterGroup === 'ALL' || filterGroup === round.name) {
+                    (appData.brackets[round.key] || []).forEach(m => {
+                        itemsToShow.push({
+                            tipo: 'bracket',
+                            subtitulo: round.name,
+                            p1: m.p1,
+                            p2: m.p2,
+                            label1: 'Participante 1',
+                            label2: 'Participante 2',
+                            winner: m.winner,
+                            fecha: m.fecha || ''
+                        });
+                    });
+                }
+            });
+            if (itemsToShow.length === 0) {
+                container.innerHTML = `<div class="col-span-2 bg-chess-card border border-chess-border p-8 rounded-2xl text-center text-gray-400">No hay enfrentamientos programados todavía.</div>`;
+                return;
+            }
+            itemsToShow.forEach((item, idx) => {
+                let statusBadge = `<span class="text-xs bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full border border-amber-500/30">Próximo Encuentro</span>`;
+                
+                if (item.tipo === 'grupo') {
+                    if (item.result === 'WHITE') statusBadge = `<span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">Ganó Blancas</span>`;
+                    if (item.result === 'BLACK') statusBadge = `<span class="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/30">Ganó Negras</span>`;
+                    if (item.result === 'DRAW') statusBadge = `<span class="text-xs bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30">Tablas (Empate)</span>`;
+                } else {
+                    if (item.winner) statusBadge = `<span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">Ganador: ${item.winner}</span>`;
+                }
+
+                let fechaFormatted = item.fecha ? new Date(item.fecha).toLocaleString() : 'Fecha por programar';
+
+                container.innerHTML += `
+                    <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-md space-y-4">
+                        <div class="flex justify-between items-center text-xs text-gray-400 border-b border-chess-border pb-3">
+                            <span class="font-bold text-amber-400">${item.subtitulo} — Encuentro #${idx + 1}</span>
+                            ${statusBadge}
+                        </div>
+                        <div class="text-xs text-gray-300 flex items-center gap-2">
+                            <i class="fa-solid fa-clock text-amber-500"></i> <span><b>Fecha Programada:</b> ${fechaFormatted}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 items-center">
+                            <div class="bg-chess-dark p-3.5 rounded-xl border border-chess-border text-center">
+                                <span class="text-[10px] uppercase font-bold text-gray-400 block mb-1">${item.label1}</span>
+                                <span class="font-bold text-white text-sm">${item.p1}</span>
+                            </div>
+                            <div class="bg-chess-dark p-3.5 rounded-xl border border-chess-border text-center">
+                                <span class="text-[10px] uppercase font-bold text-gray-400 block mb-1">${item.label2}</span>
+                                <span class="font-bold text-white text-sm">${item.p2}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // ADMINISTRACIÓN DE PARTIDAS DE GRUPO (SEPARAR FECHA Y RESULTADO)
+        function populateAdminMatches() {
+            const group = document.getElementById('admin-res-group').value;
+            const matchSelect = document.getElementById('admin-res-match');
+            if (!matchSelect) return;
+            matchSelect.innerHTML = '';
+
+            const matches = appData.matches[group] || [];
+            if (matches.length === 0) {
+                matchSelect.innerHTML = `<option value="">No hay partidas en este grupo</option>`;
+                return;
+            }
+
+            matches.forEach((m) => {
+                const w = appData.students.find(s => s.id === m.whiteId);
+                const b = appData.students.find(s => s.id === m.blackId);
+                if (w && b) {
+                    const statusText = m.result ? ` [Jugado]` : (m.fecha ? ` [Programado]` : '');
+                    matchSelect.innerHTML += `<option value="${m.id}">[Blancas] ${w.nombre} vs [Negras] ${b.nombre}${statusText}</option>`;
+                }
+            });
+            loadMatchDateToInput();
+        }
+
+        function loadMatchDateToInput() {
+            const group = document.getElementById('admin-res-group').value;
+            const matchId = document.getElementById('admin-res-match').value;
+            const dateInput = document.getElementById('admin-res-date');
+            if (!matchId || !dateInput) return;
+
+            const match = (appData.matches[group] || []).find(m => m.id === matchId);
+            if (match && match.fecha) {
+                dateInput.value = match.fecha;
+            } else {
+                dateInput.value = '';
+            }
+        }
+
+        // GUARDAR SÓLO LA FECHA DE LA PARTIDA DE GRUPO
+        function saveMatchDateOnly() {
+            const group = document.getElementById('admin-res-group').value;
+            const matchId = document.getElementById('admin-res-match').value;
+            const newDate = document.getElementById('admin-res-date').value;
+
+            if (!matchId) {
+                alert('Selecciona una partida válida.');
+                return;
+            }
+            const match = (appData.matches[group] || []).find(m => m.id === matchId);
+            if (!match) return;
+
+            match.fecha = newDate;
+            saveData();
+            populateAdminMatches();
+            alert('¡Fecha y hora programadas con éxito (sin alterar resultados)!');
+        }
+
+        // GUARDAR SÓLO EL RESULTADO DE LA PARTIDA DE GRUPO
+        function saveMatchResultOnly() {
+            const group = document.getElementById('admin-res-group').value;
+            const matchId = document.getElementById('admin-res-match').value;
+            const outcome = document.getElementById('admin-res-outcome').value;
+
+            if (!matchId) {
+                alert('Selecciona una partida válida.');
+                return;
+            }
+            const match = (appData.matches[group] || []).find(m => m.id === matchId);
+            if (!match) return;
+
+            if (match.result) {
+                const wSt = appData.students.find(s => s.id === match.whiteId);
+                const bSt = appData.students.find(s => s.id === match.blackId);
+                if (wSt && bSt) {
+                    wSt.pj--; bSt.pj--;
+                    if (match.result === 'WHITE') { wSt.g--; wSt.pts -= 1; bSt.p--; }
+                    else if (match.result === 'BLACK') { bSt.g--; bSt.pts -= 1; wSt.p--; }
+                    else if (match.result === 'DRAW') { wSt.e--; wSt.pts -= 0.5; bSt.e--; bSt.pts -= 0.5; }
+                }
+            }
+
+            match.result = outcome;
+            const whiteStudent = appData.students.find(s => s.id === match.whiteId);
+            const blackStudent = appData.students.find(s => s.id === match.blackId);
+
+            if (whiteStudent && blackStudent) {
+                whiteStudent.pj++;
+                blackStudent.pj++;
+
+                if (outcome === 'WHITE') {
+                    whiteStudent.g++; whiteStudent.pts += 1.0;
+                    blackStudent.p++;
+                } else if (outcome === 'BLACK') {
+                    blackStudent.g++; blackStudent.pts += 1.0;
+                    whiteStudent.p++;
+                } else if (outcome === 'DRAW') {
+                    whiteStudent.e++; whiteStudent.pts += 0.5;
+                    blackStudent.e++; blackStudent.pts += 0.5;
+                }
+            }
+
+            saveData();
+            populateAdminMatches();
+            alert('¡Resultado de la partida guardado y posiciones actualizadas!');
+        }
+
+        // GENERAR BRACKETS
+        function generateBrackets() {
+            for (let gKey in appData.matches) {
+                const matchesInGroup = appData.matches[gKey];
+                for (let m of matchesInGroup) {
+                    if (!m.result) {
+                        alert(`Bloqueo activo: Hay partidas pendientes en el ${gKey}. Deben jugarse y registrarse todas las partidas antes de generar los octavos.`);
+                        return;
+                    }
+                }
+            }
+
+            let qualified = [];
+            for (let i = 1; i <= TOTAL_GROUPS; i++) {
+                const gName = `Grupo ${String.fromCharCode(64 + i)}`;
+                const gStudents = appData.students.filter(s => s.grupo === gName);
+                gStudents.sort((a, b) => b.pts - a.pts);
+                if (gStudents.length > 0) {
+                    qualified.push(`${gStudents[0].nombre} ${gStudents[0].apellido}`);
+                }
+            }
+
+            if (qualified.length < 2) {
+                alert('Se necesitan al menos 2 estudiantes clasificados para generar los brackets.');
+                return;
+            }
+
+            appData.brackets.r16 = [];
+            for (let i = 0; i < 8; i++) {
+                appData.brackets.r16.push({
+                    id: `r16_${i}`,
+                    p1: qualified[i * 2] || 'Por definir',
+                    p2: qualified[i * 2 + 1] || 'Por definir',
+                    winner: null,
+                    fecha: ''
+                });
+            }
+
+            appData.brackets.qf = [ {id:'qf_0', p1:'Ganador R16 #1', p2:'Ganador R16 #2', winner:null, fecha:''}, {id:'qf_1', p1:'Ganador R16 #3', p2:'Ganador R16 #4', winner:null, fecha:''}, {id:'qf_2', p1:'Ganador R16 #5', p2:'Ganador R16 #6', winner:null, fecha:''}, {id:'qf_3', p1:'Ganador R16 #7', p2:'Ganador R16 #8', winner:null, fecha:''} ];
+            appData.brackets.sf = [ {id:'sf_0', p1:'Ganador QF #1', p2:'Ganador QF #2', winner:null, fecha:''}, {id:'sf_1', p1:'Ganador QF #3', p2:'Ganador QF #4', winner:null, fecha:''} ];
+            appData.brackets.final = [ {id:'final_0', p1:'Ganador SF #1', p2:'Ganador SF #2', winner:null, fecha:''} ];
+
+            saveData();
+            renderBracketsView();
+            populateBracketMatches();
+            populateAdminBracketSchedule();
+            alert('¡Fase de grupos completada! Octavos de Final generados.');
+        }
+
+        function populateBracketMatches() {
+            const round = document.getElementById('admin-bracket-round').value;
+            const matchSelect = document.getElementById('admin-bracket-match');
+            if (!matchSelect) return;
+
+            matchSelect.innerHTML = '';
+            const matches = appData.brackets[round] || [];
+
+            if (matches.length === 0) {
+                matchSelect.innerHTML = `<option value="">Genera los brackets primero</option>`;
+                return;
+            }
+
+            matches.forEach((m) => {
+                const wText = m.winner ? ` [Ganador: ${m.winner}]` : '';
+                matchSelect.innerHTML += `<option value="${m.id}">${m.p1} vs ${m.p2}${wText}</option>`;
+            });
+        }
+
+        function populateAdminBracketSchedule() {
+            const round = document.getElementById('admin-bracket-sched-round').value;
+            const matchSelect = document.getElementById('admin-bracket-sched-match');
+            const dateInput = document.getElementById('admin-bracket-sched-date');
+            if (!matchSelect || !dateInput) return;
+
+            matchSelect.innerHTML = '';
+            const matches = appData.brackets[round] || [];
+
+            if (matches.length === 0) {
+                matchSelect.innerHTML = `<option value="">No hay llaves en esta ronda</option>`;
+                dateInput.value = '';
+                return;
+            }
+
+            matches.forEach((m) => {
+                matchSelect.innerHTML += `<option value="${m.id}">${m.p1} vs ${m.p2}</option>`;
+            });
+            loadBracketDateToInput();
+        }
+
+        function loadBracketDateToInput() {
+            const round = document.getElementById('admin-bracket-sched-round').value;
+            const matchId = document.getElementById('admin-bracket-sched-match').value;
+            const dateInput = document.getElementById('admin-bracket-sched-date');
+            if (!matchId || !dateInput) return;
+
+            const match = (appData.brackets[round] || []).find(m => m.id === matchId);
+            if (match && match.fecha) {
+                dateInput.value = match.fecha;
+            } else {
+                dateInput.value = '';
+            }
+        }
+
+        function saveBracketDate() {
+            const round = document.getElementById('admin-bracket-sched-round').value;
+            const matchId = document.getElementById('admin-bracket-sched-match').value;
+            const newDate = document.getElementById('admin-bracket-sched-date').value;
+
+            if (!matchId) {
+                alert('Selecciona una llave válida.');
+                return;
+            }
+            const match = (appData.brackets[round] || []).find(m => m.id === matchId);
+            if (!match) return;
+
+            match.fecha = newDate;
+            saveData();
+            populateAdminBracketSchedule();
+            alert('¡Fecha y hora programadas para la llave de eliminación con éxito!');
+        }
+
+        function saveBracketWinner() {
+            const round = document.getElementById('admin-bracket-round').value;
+            const matchId = document.getElementById('admin-bracket-match').value;
+            const winnerChoice = document.getElementById('admin-bracket-winner').value;
+
+            if (!matchId) {
+                alert('Selecciona una llave válida.');
+                return;
+            }
+
+            const matches = appData.brackets[round] || [];
+            const matchObj = matches.find(m => m.id === matchId);
+            if (!matchObj) return;
+
+            const winningName = winnerChoice === '1' ? matchObj.p1 : matchObj.p2;
+            matchObj.winner = winningName;
+
+            const matchIndex = matches.indexOf(matchObj);
+            if (round === 'r16') {
+                const qfIndex = Math.floor(matchIndex / 2);
+                const qfMatch = appData.brackets.qf[qfIndex];
+                if (qfMatch) {
+                    if (matchIndex % 2 === 0) qfMatch.p1 = winningName;
+                    else qfMatch.p2 = winningName;
+                }
+            } else if (round === 'qf') {
+                const sfIndex = Math.floor(matchIndex / 2);
+                const sfMatch = appData.brackets.sf[sfIndex];
+                if (sfMatch) {
+                    if (matchIndex % 2 === 0) sfMatch.p1 = winningName;
+                    else sfMatch.p2 = winningName;
+                }
+            } else if (round === 'sf') {
+                const finalMatch = appData.brackets.final[0];
+                if (finalMatch) {
+                    if (matchIndex === 0) finalMatch.p1 = winningName;
+                    else finalMatch.p2 = winningName;
+                }
+            }
+
+            saveData();
+            renderBracketsView();
+            populateBracketMatches();
+            populateAdminBracketSchedule();
+            alert(`¡Ganador guardado! ${winningName} avanza de ronda.`);
+        }
+
+        function renderBracketsView() {
+            const r16Container = document.getElementById('bracket-r16');
+            const qfContainer = document.getElementById('bracket-qf');
+            const sfContainer = document.getElementById('bracket-sf');
+            const finalContainer = document.getElementById('bracket-final');
+
+            if (!r16Container) return;
+
+            r16Container.innerHTML = '';
+            (appData.brackets.r16 || []).forEach((m, idx) => {
+                r16Container.innerHTML += `
+                    <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
+                        <div class="text-gray-400 font-bold mb-1">Octavos #${idx + 1}</div>
+                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
+                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                    </div>
+                `;
+            });
+
+            qfContainer.innerHTML = '';
+            (appData.brackets.qf || []).forEach((m, idx) => {
+                qfContainer.innerHTML += `
+                    <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
+                        <div class="text-amber-400 font-bold mb-1">Cuartos #${idx + 1}</div>
+                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
+                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                    </div>
+                `;
+            });
+
+            sfContainer.innerHTML = '';
+            (appData.brackets.sf || []).forEach((m, idx) => {
+                sfContainer.innerHTML += `
+                    <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
+                        <div class="text-amber-400 font-bold mb-1">Semifinal #${idx + 1}</div>
+                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
+                        <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                    </div>
+                `;
+            });
+
+            finalContainer.innerHTML = '';
+            (appData.brackets.final || []).forEach((m) => {
+                finalContainer.innerHTML += `
+                    <div class="bg-gradient-to-br from-amber-900/40 to-chess-dark p-4 rounded-xl border border-amber-500/40 text-xs space-y-2 text-center shadow-lg">
+                        <div class="text-amber-400 font-extrabold uppercase tracking-wide"><i class="fa-solid fa-crown mr-1"></i> Gran Final</div>
+                        <div class="text-white px-3 py-2 rounded font-semibold ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
+                        <div class="text-gray-400 font-bold">VS</div>
+                        <div class="text-white px-3 py-2 rounded font-semibold ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderAdminStudents() {
+            const tbody = document.getElementById('admin-students-tbody');
+            const countEl = document.getElementById('admin-student-count');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            countEl.innerText = `Total: ${appData.students.length}`;
+
+            if (appData.students.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">No hay estudiantes registrados.</td></tr>`;
+                return;
+            }
+
+            appData.students.forEach(st => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-chess-dark transition">
+                        <td class="p-3 font-semibold text-white">${st.nombre} ${st.apellido}</td>
+                        <td class="p-3 text-amber-400">${st.grupo}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="deleteStudent('${st.id}')" class="bg-red-500/20 text-red-400 px-3 py-1 rounded-lg text-xs hover:bg-red-500/30 transition"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        function updateStatCounters() {
+            const statEl = document.getElementById('stat-students');
+            if (statEl) statEl.innerText = appData.students.length;
+        }
+
+        // CARGA INICIAL
+        window.onload = function() {
+            initGroupSelectors();
+            updateStatCounters();
+            renderGroups();
+            renderSchedule();
+            renderBracketsView();
+        };
+    </script>
+</body>
+</html>
