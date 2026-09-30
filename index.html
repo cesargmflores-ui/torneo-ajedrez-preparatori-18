@@ -45,8 +45,8 @@
                     <i class="fa-solid fa-chess-knight"></i>
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-lg tracking-wide text-slate-900">TORNEO DE AJEDREZ</h1>
-                    <p class="text-xs text-slate-500">Sistema Oficial de Competencia</p>
+                    <h1 class="font-extrabold text-lg tracking-wide text-slate-900">TORNEO DE OTOÑO</h1>
+                    <p class="text-xs text-slate-500">PREPARATORIA #18</p>
                 </div>
             </div>
 
@@ -71,7 +71,7 @@
             <div class="bg-gradient-to-r from-amber-500/10 via-chess-card to-chess-card border border-chess-border p-8 md:p-12 rounded-3xl shadow-md flex flex-col md:flex-row items-center justify-between gap-8">
                 <div class="space-y-4 max-w-2xl">
                     <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full border border-amber-300 uppercase tracking-wider">Temporada Oficial</span>
-                    <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">Campeonato Escolar de Ajedrez Preparatoria #18</h2>
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">Torneo de Otoño Preparatoria #18</h2>
                     <p class="text-slate-600 text-sm md:text-base leading-relaxed">Demuestra tu estrategia en el tablero. Participa en la fase de grupos y busca tu pase a la gran eliminatoria directa hacia el campeonato.</p>
                     <div class="flex gap-4 pt-2">
                         <button onclick="switchTab('groups')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-xl transition shadow">Ver Posiciones</button>
@@ -177,10 +177,22 @@
             <div class="bg-chess-card border border-chess-border p-8 rounded-3xl space-y-6 shadow-sm">
                 <h2 class="text-2xl font-bold text-amber-600 flex items-center gap-2"><i class="fa-solid fa-book-open"></i> Reglamento del Torneo</h2>
                 <ul class="list-disc list-inside space-y-3 text-slate-700 text-sm leading-relaxed">
-                    <li><b>Sistema de Puntuación:</b> Victoria = 1 punto, Tablas (Empate) = 0.5 puntos, Derrota = 0 puntos.</li>
-                    <li><b>Fase de Grupos:</b> Todos contra todos dentro de su grupo correspondiente.</li>
-                    <li><b>Clasificación:</b> Los primeros lugares de cada grupo avanzan a la fase de Octavos de Final.</li>
-                    <li><b>Puntualidad:</b> Se dará un tiempo de tolerancia de 10 minutos antes de declarar default.</li>
+                    <li><b>Pieza tocada:</b> Pieza tocada es pieza jugada,siempre que sea un movimiento legal.</li>
+                    <li><b>Ajuste:</b> Se puede acomodar una pieza en su casilla sin moverla, pero debes declararlo antes diciendo "Ajuste".</li>
+                    <li><b>Tiempo:</b> Cada jugador tiene 10 minutos para realizar sus movimientos.</li>
+                    <li><b>Una sola mano:</b> Se debe mover la pieza y tocar el reloj con la misma mano.</li>
+                    <li><b>Rendición:</b> Un jugador puede rendirse en cualquier momento, lo que resulta en la perdida de la partida.</li>
+                    <li><b>Puntuación:</b> Victoria = 1 punto, Tablas (Empate) = 0.5 puntos, Derrota = 0 puntos.</li>
+                    <li><b>Rondas:</b> El torneo se jugará en formato de liga, donde cada jugador enfrentará a todos los demás en su grupo. Los mejores jugadores avanzarán a la siguiente fase.</li>
+                    <li><b>Avance a la fase de eliminación directa:</b> Los 2 jugadores con mayor puntaje en cada grupo avanzarán a la fase de eliminación directa, donde se enfrentarán en un cuadro de eliminacion simple.</li>
+                    <li><b>Conducta:</b> Se espera una conducta respetuosa y deportiva de todos los participantes. Cualquier conducta antideportiva puede resultar en la descalificación directa</li>
+                    <li><b>Tablas(Fase de grupos):</b> Se pueden ofrecer tablas en cualquier momento, pero el oponente puede aceptarlas o rechazarlas. Si se rechazan, la partida continua</li>
+                    <li><b>Desempate (Fase de grupos):</b> En caso de empate en puntos, se aplicaran los siguientes criterios:
+                        <ul class="list-decimal list-inside space-y-2 text-slate-700 text-sm leading-relaxed pl-6">
+                            <li>Resultado del enfrentamiento directo entre los jugadores empatados.</li>
+                            <li>Mayor cantidad de partidas jugadas.</li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </section>
@@ -461,7 +473,7 @@
 
     <!-- FOOTER -->
     <footer class="bg-chess-card border-t border-chess-border py-6 mt-12 text-center text-xs text-slate-500">
-        <p>Sistema de Gestión de Torneo de Ajedrez Escolar &copy; 2026</p>
+        <p>Prepratoria Tecnica 501 &copy; 2026</p>
     </footer>
     
 <!-- LÓGICA JAVASCRIPT CONECTADA A FIREBASE FIRESTORE -->
