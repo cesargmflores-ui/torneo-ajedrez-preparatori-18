@@ -1,5 +1,4 @@
 /* Estilos personalizados complementarios para el Torneo de Ajedrez Escolar */
-
 html {
     scroll-behavior: smooth;
 }
@@ -11,11 +10,11 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-    background: #121214;
+    background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #2f2f3a;
+    background: #cbd5e1;
     border-radius: 4px;
 }
 
@@ -29,7 +28,7 @@ html {
 }
 
 .bg-chess-card:hover {
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 }
 
 /* Ajustes responsivos adicionales */

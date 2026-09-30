@@ -6,7 +6,6 @@
 <!--Este codigo esta funcionando gracias a 20 padres nuestros, 13 aves maria y un sacricifio-->
 <!--Cualquier modificacion sera bajo su propio riesgo ya que no se sabe como funciona este codigo-->
 <!--Att: Grupo 501 :) -->
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,12 +22,12 @@
                 extend: {
                     colors: {
                         chess: {
-                            darker: '#121214',
-                            dark: '#18181b',
-                            card: '#202024',
-                            border: '#27272a',
-                            accent: '#f59e0b',
-                            hover: '#d97706'
+                            darker: '#f8fafc',
+                            dark: '#f1f5f9',
+                            card: '#ffffff',
+                            border: '#e2e8f0',
+                            accent: '#d97706',
+                            hover: '#b45309'
                         }
                     }
                 }
@@ -36,31 +35,30 @@
         }
     </script>
 </head>
-<body class="bg-chess-darker text-gray-100 min-h-screen font-sans flex flex-col justify-between">
+<body class="bg-chess-darker text-slate-800 min-h-screen font-sans flex flex-col justify-between">
 
     <!-- HEADER / NAVEGACIÓN -->
-    <header class="bg-chess-dark border-b border-chess-border sticky top-0 z-50 shadow-lg">
+    <header class="bg-chess-card border-b border-chess-border sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
-                <div class="bg-amber-500 text-chess-darker p-2.5 rounded-xl font-bold text-xl shadow">
+                <div class="bg-amber-600 text-white p-2.5 rounded-xl font-bold text-xl shadow">
                     <i class="fa-solid fa-chess-knight"></i>
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-lg tracking-wide text-white">TORNEO DE AJEDREZ</h1>
-                    <p class="text-xs text-gray-400">Sistema Oficial de Competencia</p>
+                    <h1 class="font-extrabold text-lg tracking-wide text-slate-900">TORNEO DE AJEDREZ</h1>
+                    <p class="text-xs text-slate-500">Sistema Oficial de Competencia</p>
                 </div>
             </div>
 
             <!-- Navegación por Pestañas -->
-            <nav class="flex flex-wrap gap-1.5 justify-center bg-chess-card p-1.5 rounded-xl border border-chess-border">
-                <button onclick="switchTab('home')" id="btn-home" class="px-4 py-2 rounded-lg text-sm font-semibold transition bg-chess-accent text-chess-darker shadow">Inicio</button>
-                <button onclick="switchTab('groups')" id="btn-groups" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Grupos</button>
-                <button onclick="switchTab('schedule')" id="btn-schedule" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Calendario</button>
-                <button onclick="switchTab('brackets')" id="btn-brackets" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Eliminatorias</button>
-                <button onclick="switchTab('rules')" id="btn-rules" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border">Reglas</button>
-                <!-- BOTÓN: CRÉDITOS -->
-                <button onclick="switchTab('credits')" id="btn-credits" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border"><i class="fa-solid fa-users-gear mr-1"></i> Créditos</button>
-                <button onclick="switchTab('admin')" id="btn-admin" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border"><i class="fa-solid fa-lock mr-1"></i> Admin</button>
+            <nav class="flex flex-wrap gap-1.5 justify-center bg-chess-dark p-1.5 rounded-xl border border-chess-border">
+                <button onclick="switchTab('home')" id="btn-home" class="px-4 py-2 rounded-lg text-sm font-semibold transition bg-amber-600 text-white shadow">Inicio</button>
+                <button onclick="switchTab('groups')" id="btn-groups" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-600 hover:text-slate-900 hover:bg-chess-border">Grupos</button>
+                <button onclick="switchTab('schedule')" id="btn-schedule" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-600 hover:text-slate-900 hover:bg-chess-border">Calendario</button>
+                <button onclick="switchTab('brackets')" id="btn-brackets" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-600 hover:text-slate-900 hover:bg-chess-border">Eliminatorias</button>
+                <button onclick="switchTab('rules')" id="btn-rules" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-600 hover:text-slate-900 hover:bg-chess-border">Reglas</button>
+                <button onclick="switchTab('credits')" id="btn-credits" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-600 hover:text-slate-900 hover:bg-chess-border"><i class="fa-solid fa-users-gear mr-1"></i> Créditos</button>
+                <button onclick="switchTab('admin')" id="btn-admin" class="px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-600 hover:text-slate-900 hover:bg-chess-border"><i class="fa-solid fa-lock mr-1"></i> Admin</button>
             </nav>
         </div>
     </header>
@@ -70,41 +68,41 @@
 
         <!-- PESTAÑA: INICIO -->
         <section id="tab-home" class="space-y-8">
-            <div class="bg-gradient-to-r from-amber-600/20 via-chess-card to-chess-card border border-chess-border p-8 md:p-12 rounded-3xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="bg-gradient-to-r from-amber-500/10 via-chess-card to-chess-card border border-chess-border p-8 md:p-12 rounded-3xl shadow-md flex flex-col md:flex-row items-center justify-between gap-8">
                 <div class="space-y-4 max-w-2xl">
-                    <span class="bg-amber-500/10 text-amber-400 text-xs font-bold px-3 py-1 rounded-full border border-amber-500/30 uppercase tracking-wider">Temporada Oficial</span>
-                    <h2 class="text-3xl md:text-5xl font-extrabold text-white leading-tight">Campeonato Escolar de Ajedrez Preparatoria #18</h2>
-                    <p class="text-gray-300 text-sm md:text-base leading-relaxed">Demuestra tu estrategia en el tablero. Participa en la fase de grupos y busca tu pase a la gran eliminatoria directa hacia el campeonato.</p>
+                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full border border-amber-300 uppercase tracking-wider">Temporada Oficial</span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight">Campeonato Escolar de Ajedrez Preparatoria #18</h2>
+                    <p class="text-slate-600 text-sm md:text-base leading-relaxed">Demuestra tu estrategia en el tablero. Participa en la fase de grupos y busca tu pase a la gran eliminatoria directa hacia el campeonato.</p>
                     <div class="flex gap-4 pt-2">
-                        <button onclick="switchTab('groups')" class="bg-amber-500 hover:bg-amber-600 text-chess-darker font-bold px-6 py-3 rounded-xl transition shadow-lg">Ver Posiciones</button>
-                        <button onclick="switchTab('schedule')" class="bg-chess-border hover:bg-gray-700 text-white font-bold px-6 py-3 rounded-xl transition">Ver Calendario</button>
+                        <button onclick="switchTab('groups')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-xl transition shadow">Ver Posiciones</button>
+                        <button onclick="switchTab('schedule')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-6 py-3 rounded-xl transition">Ver Calendario</button>
                     </div>
                 </div>
                 <div class="bg-chess-dark p-6 rounded-2xl border border-chess-border text-center shadow-inner w-full md:w-72 space-y-3">
-                    <i class="fa-solid fa-users text-4xl text-amber-500"></i>
-                    <h3 class="text-gray-300 font-semibold text-sm">Estudiantes Inscritos</h3>
-                    <p id="stat-students" class="text-3xl font-extrabold text-white">0</p>
+                    <i class="fa-solid fa-users text-4xl text-amber-600"></i>
+                    <h3 class="text-slate-600 font-semibold text-sm">Estudiantes Inscritos</h3>
+                    <p id="stat-students" class="text-3xl font-extrabold text-slate-900">0</p>
                 </div>
             </div>
         </section>
 
         <!-- PESTAÑA: GRUPOS -->
         <section id="tab-groups" class="hidden space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-chess-card p-6 rounded-2xl border border-chess-border">
-                <h2 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-ranking-star text-amber-500"></i> Tablas de Posiciones</h2>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-chess-card p-6 rounded-2xl border border-chess-border shadow-sm">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-ranking-star text-amber-600"></i> Tablas de Posiciones</h2>
                 <div class="flex items-center gap-3 w-full md:w-auto">
-                    <label class="text-xs font-bold text-gray-400 uppercase">Seleccionar Grupo:</label>
-                    <select id="group-select" onchange="renderGroups()" class="bg-chess-dark border border-chess-border rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-amber-500 w-full md:w-48">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Seleccionar Grupo:</label>
+                    <select id="group-select" onchange="renderGroups()" class="bg-chess-dark border border-chess-border rounded-xl px-4 py-2 text-slate-800 text-sm focus:outline-none focus:border-amber-500 w-full md:w-48">
                         <!-- Dinámico -->
                     </select>
                 </div>
             </div>
 
-            <div class="bg-chess-card border border-chess-border rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-chess-card border border-chess-border rounded-2xl overflow-hidden shadow-sm">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
-                            <tr class="bg-chess-dark text-gray-400 uppercase text-xs border-b border-chess-border">
+                            <tr class="bg-chess-dark text-slate-500 uppercase text-xs border-b border-chess-border">
                                 <th class="p-4 font-bold">#</th>
                                 <th class="p-4 font-bold">Estudiante</th>
                                 <th class="p-4 font-bold text-center">PJ</th>
@@ -125,14 +123,14 @@
 
         <!-- PESTAÑA: CALENDARIO -->
         <section id="tab-schedule" class="hidden space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-chess-card p-6 rounded-2xl border border-chess-border">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-chess-card p-6 rounded-2xl border border-chess-border shadow-sm">
                 <div>
-                    <h2 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-calendar-days text-amber-500"></i> Calendario de Enfrentamientos</h2>
-                    <p class="text-xs text-gray-400">Consulta las fechas programadas y resultados de grupos y eliminatorias</p>
+                    <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-calendar-days text-amber-600"></i> Calendario de Enfrentamientos</h2>
+                    <p class="text-xs text-slate-500">Consulta las fechas programadas y resultados de grupos y eliminatorias</p>
                 </div>
                 <div class="flex items-center gap-3 w-full md:w-auto">
-                    <label class="text-xs font-bold text-gray-400 uppercase">Filtrar:</label>
-                    <select id="schedule-filter-group" onchange="renderSchedule()" class="bg-chess-dark border border-chess-border rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-amber-500 w-full md:w-60">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Filtrar:</label>
+                    <select id="schedule-filter-group" onchange="renderSchedule()" class="bg-chess-dark border border-chess-border rounded-xl px-4 py-2 text-slate-800 text-sm focus:outline-none focus:border-amber-500 w-full md:w-60">
                         <!-- Dinámico -->
                     </select>
                 </div>
@@ -145,30 +143,30 @@
 
         <!-- PESTAÑA: ELIMINATORIAS (BRACKETS) -->
         <section id="tab-brackets" class="hidden space-y-6">
-            <div class="bg-chess-card p-6 rounded-2xl border border-chess-border text-center space-y-2">
-                <h2 class="text-2xl font-bold text-white flex items-center justify-center gap-2"><i class="fa-solid fa-sitemap text-amber-500"></i> Fase de Eliminación Directa</h2>
-                <p class="text-sm text-gray-400">Camino hacia el campeonato escolar de ajedrez</p>
+            <div class="bg-chess-card p-6 rounded-2xl border border-chess-border text-center space-y-2 shadow-sm">
+                <h2 class="text-2xl font-bold text-slate-900 flex items-center justify-center gap-2"><i class="fa-solid fa-sitemap text-amber-600"></i> Fase de Eliminación Directa</h2>
+                <p class="text-sm text-slate-500">Camino hacia el campeonato escolar de ajedrez</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Octavos -->
                 <div class="space-y-4">
-                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-400 text-sm">Octavos de Final</div>
+                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-700 text-sm">Octavos de Final</div>
                     <div id="bracket-r16" class="space-y-3"></div>
                 </div>
                 <!-- Cuartos -->
                 <div class="space-y-4">
-                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-400 text-sm">Cuartos de Final</div>
+                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-700 text-sm">Cuartos de Final</div>
                     <div id="bracket-qf" class="space-y-3"></div>
                 </div>
                 <!-- Semifinales -->
                 <div class="space-y-4">
-                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-400 text-sm">Semifinales</div>
+                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-700 text-sm">Semifinales</div>
                     <div id="bracket-sf" class="space-y-3"></div>
                 </div>
                 <!-- Final -->
                 <div class="space-y-4">
-                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-400 text-sm">Gran Final</div>
+                    <div class="bg-chess-dark border border-chess-border p-3 rounded-xl text-center font-bold text-amber-700 text-sm">Gran Final</div>
                     <div id="bracket-final" class="space-y-3"></div>
                 </div>
             </div>
@@ -176,9 +174,9 @@
 
         <!-- PESTAÑA: REGLAS -->
         <section id="tab-rules" class="hidden space-y-6">
-            <div class="bg-chess-card border border-chess-border p-8 rounded-3xl space-y-6">
-                <h2 class="text-2xl font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-book-open"></i> Reglamento del Torneo</h2>
-                <ul class="list-disc list-inside space-y-3 text-gray-300 text-sm leading-relaxed">
+            <div class="bg-chess-card border border-chess-border p-8 rounded-3xl space-y-6 shadow-sm">
+                <h2 class="text-2xl font-bold text-amber-600 flex items-center gap-2"><i class="fa-solid fa-book-open"></i> Reglamento del Torneo</h2>
+                <ul class="list-disc list-inside space-y-3 text-slate-700 text-sm leading-relaxed">
                     <li><b>Sistema de Puntuación:</b> Victoria = 1 punto, Tablas (Empate) = 0.5 puntos, Derrota = 0 puntos.</li>
                     <li><b>Fase de Grupos:</b> Todos contra todos dentro de su grupo correspondiente.</li>
                     <li><b>Clasificación:</b> Los primeros lugares de cada grupo avanzan a la fase de Octavos de Final.</li>
@@ -189,98 +187,89 @@
 
         <!-- PESTAÑA: CRÉDITOS DEL EQUIPO -->
         <section id="tab-credits" class="hidden space-y-6">
-            <div class="bg-chess-card border border-chess-border p-8 rounded-3xl space-y-6 shadow-xl">
+            <div class="bg-chess-card border border-chess-border p-8 rounded-3xl space-y-6 shadow-sm">
                 <div class="text-center space-y-2">
-                    <h2 class="text-2xl font-bold text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-users-gear"></i> Créditos y Estructura Organizacional</h2>
-                    <p class="text-sm text-gray-400">Equipo de trabajo encargado del desarrollo y gestión del proyecto Grupo 501</p>
+                    <h2 class="text-2xl font-bold text-amber-600 flex items-center justify-center gap-2"><i class="fa-solid fa-users-gear"></i> Créditos y Estructura Organizacional</h2>
+                    <p class="text-sm text-slate-500">Equipo de trabajo encargado del desarrollo y gestión del proyecto Grupo 501</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
-                    <!-- Dirección y Desarrollo Técnico -->
                     <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Dirección y Desarrollo Técnico</h3>
-                        <ul class="space-y-2 text-sm text-gray-300">
-                            <li>• <b>Luis Alonso Garza Luna</b> — <span class="text-gray-400">Tutor / Asesor Académico</span></li>
-                            <li>• <b>Cesar Gabriel Muñiz Flores</b> — <span class="text-gray-400">Programador Principal / Desarrollador Líder</span></li>
+                        <h3 class="font-bold text-amber-700 text-sm uppercase border-b border-chess-border pb-2">Dirección y Desarrollo Técnico</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>• <b>Luis Alonso Garza Luna</b> — <span class="text-slate-500">Tutor / Asesor Académico</span></li>
+                            <li>• <b>Cesar Gabriel Muñiz Flores</b> — <span class="text-slate-500">Programador Principal / Desarrollador Líder</span></li>
                         </ul>
                     </div>
 
-                    <!-- Equipo de Desarrollo y Programación -->
                     <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Desarrollo y Programación</h3>
-                        <ul class="space-y-2 text-sm text-gray-300">
-                            <li>• <b>Jesus Alejandro Bautista Luna</b> — <span class="text-gray-400">Desarrollador Junior / Soporte</span></li>
-                            <li>• <b>Yahir Carrillo Gonzales</b> — <span class="text-gray-400">Desarrollador Junior / Soporte</span></li>
-                            <li>• <b>Rolando Castillo Aparicio</b> — <span class="text-gray-400">Desarrollador Junior / Soporte</span></li>
+                        <h3 class="font-bold text-amber-700 text-sm uppercase border-b border-chess-border pb-2">Desarrollo y Programación</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>• <b>Jesus Alejandro Bautista Luna</b> — <span class="text-slate-500">Desarrollador Junior / Soporte</span></li>
+                            <li>• <b>Yahir Carrillo Gonzales</b> — <span class="text-slate-500">Desarrollador Junior / Soporte</span></li>
+                            <li>• <b>Rolando Castillo Aparicio</b> — <span class="text-slate-500">Desarrollador Junior / Soporte</span></li>
                         </ul>
                     </div>
 
-                    <!-- Bases de Datos y Gestión de Información -->
                     <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Bases de Datos y Gestión</h3>
-                        <ul class="space-y-2 text-sm text-gray-300">
-                            <li>• <b>Jose Manuel Galvan Rodriguez</b> — <span class="text-gray-400">Administrador de Base de Datos</span></li>
-                            <li>• <b>Ana Karla Gamez Arrieta</b> — <span class="text-gray-400">Gestor de Datos y Registros</span></li>
-                            <li>• <b>Ismael Garcia Ibarra</b> — <span class="text-gray-400">Gestor de Datos y Registros</span></li>
+                        <h3 class="font-bold text-amber-700 text-sm uppercase border-b border-chess-border pb-2">Bases de Datos y Gestión</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>• <b>Jose Manuel Galvan Rodriguez</b> — <span class="text-slate-500">Administrador de Base de Datos</span></li>
+                            <li>• <b>Ana Karla Gamez Arrieta</b> — <span class="text-slate-500">Gestor de Datos y Registros</span></li>
+                            <li>• <b>Ismael Garcia Ibarra</b> — <span class="text-slate-500">Gestor de Datos y Registros</span></li>
                         </ul>
                     </div>
 
-                    <!-- Control de Calidad y Pruebas (QA) -->
                     <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Control de Calidad (QA)</h3>
-                        <ul class="space-y-2 text-sm text-gray-300">
-                            <li>• <b>Lazaro Jonas Garza Escobedo</b> — <span class="text-gray-400">Analista de Control de Calidad (QA)</span></li>
-                            <li>• <b>Jose Roberto Hernandez Salazar</b> — <span class="text-gray-400">Analista de Control de Calidad (QA)</span></li>
-                            <li>• <b>Estefani Arali Ibañez Grimaldo</b> — <span class="text-gray-400">Analista de Control de Calidad (QA)</span></li>
+                        <h3 class="font-bold text-amber-700 text-sm uppercase border-b border-chess-border pb-2">Control de Calidad (QA)</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>• <b>Lazaro Jonas Garza Escobedo</b> — <span class="text-slate-500">Analista de Control de Calidad (QA)</span></li>
+                            <li>• <b>Jose Roberto Hernandez Salazar</b> — <span class="text-slate-500">Analista de Control de Calidad (QA)</span></li>
+                            <li>• <b>Estefani Arali Ibañez Grimaldo</b> — <span class="text-slate-500">Analista de Control de Calidad (QA)</span></li>
                         </ul>
                     </div>
 
-                    <!-- Documentación y Análisis de Requerimientos -->
                     <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Documentación y Análisis</h3>
-                        <ul class="space-y-2 text-sm text-gray-300">
-                            <li>• <b>Diego Aldair Ibarra Barron</b> — <span class="text-gray-400">Analista de Requerimientos y Documentación</span></li>
-                            <li>• <b>Alan Artemio Ibarra Nava</b> — <span class="text-gray-400">Analista de Requerimientos y Documentación</span></li>
-                            <li>• <b>Fernando Gael Jimenez Elizondo</b> — <span class="text-gray-400">Analista de Requerimientos y Documentación</span></li>
+                        <h3 class="font-bold text-amber-700 text-sm uppercase border-b border-chess-border pb-2">Documentación y Análisis</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>• <b>Diego Aldair Ibarra Barron</b> — <span class="text-slate-500">Analista de Requerimientos y Documentación</span></li>
+                            <li>• <b>Alan Artemio Ibarra Nava</b> — <span class="text-slate-500">Analista de Requerimientos y Documentación</span></li>
+                            <li>• <b>Fernando Gael Jimenez Elizondo</b> — <span class="text-slate-500">Analista de Requerimientos y Documentación</span></li>
                         </ul>
                     </div>
 
-                    <!-- Logística, Operaciones y Coordinación -->
                     <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Logística y Coordinación</h3>
-                        <ul class="space-y-2 text-sm text-gray-300">
-                            <li>• <b>Ariana Sarai Lozano Carranza</b> — <span class="text-gray-400">Coordinador de Logística</span></li>
-                            <li>• <b>Zayra Yaneth Martinez Hilario</b> — <span class="text-gray-400">Coordinador de Logística</span></li>
-                            <li>• <b>Agel Francisco Medina Saldaña</b> — <span class="text-gray-400">Coordinador de Logística</span></li>
+                        <h3 class="font-bold text-amber-700 text-sm uppercase border-b border-chess-border pb-2">Logística y Coordinación</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>• <b>Ariana Sarai Lozano Carranza</b> — <span class="text-slate-500">Coordinador de Logística</span></li>
+                            <li>• <b>Zayra Yaneth Martinez Hilario</b> — <span class="text-slate-500">Coordinador de Logística</span></li>
+                            <li>• <b>Agel Francisco Medina Saldaña</b> — <span class="text-slate-500">Coordinador de Logística</span></li>
                         </ul>
                     </div>
 
-                    <!-- Diseño, Interfaz y Experiencia de Usuario (UI/UX) -->
                     <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Diseño UI / UX</h3>
-                        <ul class="space-y-2 text-sm text-gray-300">
-                            <li>• <b>Natalie Ximena Moreno Lopez</b> — <span class="text-gray-400">Diseñador UI / UX</span></li>
-                            <li>• <b>Angel Gabriel Peña Cerrato</b> — <span class="text-gray-400">Diseñador UI / UX</span></li>
-                            <li>• <b>Osvaldo Gabriel Rodriguez Espinoza</b> — <span class="text-gray-400">Diseñador UI / UX</span></li>
+                        <h3 class="font-bold text-amber-700 text-sm uppercase border-b border-chess-border pb-2">Diseño UI / UX</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>• <b>Natalie Ximena Moreno Lopez</b> — <span class="text-slate-500">Diseñador UI / UX</span></li>
+                            <li>• <b>Angel Gabriel Peña Cerrato</b> — <span class="text-slate-500">Diseñador UI / UX</span></li>
+                            <li>• <b>Osvaldo Gabriel Rodriguez Espinoza</b> — <span class="text-slate-500">Diseñador UI / UX</span></li>
                         </ul>
                     </div>
 
-                    <!-- Soporte de Infraestructura y Despliegue -->
                     <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Infraestructura y Despliegue</h3>
-                        <ul class="space-y-2 text-sm text-gray-300">
-                            <li>• <b>Brayan Emiliano Rodriguez Quintero</b> — <span class="text-gray-400">Especialista en Infraestructura</span></li>
-                            <li>• <b>Vicente Rafael Rubio Maldonado</b> — <span class="text-gray-400">Especialista en Infraestructura</span></li>
-                            <li>• <b>Eddy Fernando Sanchez Gonzales</b> — <span class="text-gray-400">Especialista en Infraestructura</span></li>
+                        <h3 class="font-bold text-amber-700 text-sm uppercase border-b border-chess-border pb-2">Infraestructura y Despliegue</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>• <b>Brayan Emiliano Rodriguez Quintero</b> — <span class="text-slate-500">Especialista en Infraestructura</span></li>
+                            <li>• <b>Vicente Rafael Rubio Maldonado</b> — <span class="text-slate-500">Especialista en Infraestructura</span></li>
+                            <li>• <b>Eddy Fernando Sanchez Gonzales</b> — <span class="text-slate-500">Especialista en Infraestructura</span></li>
                         </ul>
                     </div>
 
-                    <!-- Validación e Integración de Sistemas -->
                     <div class="bg-chess-dark border border-chess-border p-5 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-amber-400 text-sm uppercase border-b border-chess-border pb-2">Validación e Integración</h3>
-                        <ul class="space-y-2 text-sm text-gray-300">
-                            <li>• <b>Gerardo Sanchez Lopez</b> — <span class="text-gray-400">Analista de Integración</span></li>
-                            <li>• <b>Dante Gael Villarreal Flores</b> — <span class="text-gray-400">Analista de Integración</span></li>
+                        <h3 class="font-bold text-amber-700 text-sm uppercase border-b border-chess-border pb-2">Validación e Integración</h3>
+                        <ul class="space-y-2 text-sm text-slate-700">
+                            <li>• <b>Gerardo Sanchez Lopez</b> — <span class="text-slate-500">Analista de Integración</span></li>
+                            <li>• <b>Dante Gael Villarreal Flores</b> — <span class="text-slate-500">Analista de Integración</span></li>
                         </ul>
                     </div>
                 </div>
@@ -290,69 +279,68 @@
         <!-- PESTAÑA: ADMIN -->
         <section id="tab-admin" class="hidden space-y-8">
             <!-- Login Box -->
-            <div id="admin-auth-box" class="max-w-md mx-auto bg-chess-card border border-chess-border p-8 rounded-3xl shadow-xl space-y-6">
+            <div id="admin-auth-box" class="max-w-md mx-auto bg-chess-card border border-chess-border p-8 rounded-3xl shadow-sm space-y-6">
                 <div class="text-center space-y-2">
-                    <div class="bg-amber-500/10 text-amber-400 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto border border-amber-500/30 text-xl"><i class="fa-solid fa-lock"></i></div>
-                    <h2 class="text-xl font-bold text-white">Acceso de Administrador</h2>
-                    <p class="text-xs text-gray-400">Ingresa la contraseña para gestionar el torneo</p>
+                    <div class="bg-amber-100 text-amber-800 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto border border-amber-300 text-xl"><i class="fa-solid fa-lock"></i></div>
+                    <h2 class="text-xl font-bold text-slate-900">Acceso de Administrador</h2>
+                    <p class="text-xs text-slate-500">Ingresa la contraseña para gestionar el torneo</p>
                 </div>
                 <form onsubmit="authenticateAdmin(event)" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Contraseña</label>
-                        <input type="password" id="admin-pass-input" placeholder="••••••••" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500" required>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Contraseña</label>
+                        <input type="password" id="admin-pass-input" placeholder="••••••••" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-3 text-slate-800 text-sm focus:outline-none focus:border-amber-500" required>
                     </div>
-                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-chess-darker font-bold py-3 rounded-xl transition shadow">Ingresar al Panel</button>
+                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl transition shadow">Ingresar al Panel</button>
                 </form>
             </div>
 
             <!-- Dashboard Admin -->
             <div id="admin-dashboard" class="hidden space-y-8">
-                <div class="flex justify-between items-center bg-chess-card p-6 rounded-2xl border border-chess-border flex-wrap gap-4">
+                <div class="flex justify-between items-center bg-chess-card p-6 rounded-2xl border border-chess-border flex-wrap gap-4 shadow-sm">
                     <div>
-                        <h2 class="text-xl font-bold text-white">Panel de Administración</h2>
-                        <p class="text-xs text-gray-400">Gestión completa de estudiantes, fechas y resultados</p>
+                        <h2 class="text-xl font-bold text-slate-900">Panel de Administración</h2>
+                        <p class="text-xs text-slate-500">Gestión completa de estudiantes, fechas y resultados</p>
                     </div>
                     <div class="flex items-center gap-3">
-                        <!-- BOTÓN: REINICIAR TORNEO -->
                         <button onclick="reiniciarTorneo()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow flex items-center gap-1.5">
                             <i class="fa-solid fa-rotate-right"></i> Reiniciar Torneo
                         </button>
-                        <button onclick="logoutAdmin()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-xl text-xs font-bold transition border border-red-500/30">Cerrar Sesión</button>
+                        <button onclick="logoutAdmin()" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-xs font-bold transition border border-red-200 hover:bg-red-100">Cerrar Sesión</button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <!-- Registrar Estudiante -->
-                    <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-lg space-y-4">
-                        <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-user-plus"></i> Registrar Estudiante</h3>
+                    <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-sm space-y-4">
+                        <h3 class="text-lg font-bold text-amber-600 flex items-center gap-2"><i class="fa-solid fa-user-plus"></i> Registrar Estudiante</h3>
                         <form onsubmit="registerStudent(event)" class="space-y-4">
                             <div>
-                                <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Nombre(s)</label>
-                                <input type="text" id="reg-nombre" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" required>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Nombre(s)</label>
+                                <input type="text" id="reg-nombre" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500" required>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Apellido(s)</label>
-                                <input type="text" id="reg-apellido" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" required>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Apellido(s)</label>
+                                <input type="text" id="reg-apellido" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500" required>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Grupo Asignado</label>
-                                <select id="reg-grupo" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Grupo Asignado</label>
+                                <select id="reg-grupo" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500">
                                     <!-- Dinámico -->
                                 </select>
                             </div>
-                            <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-chess-darker font-bold py-2.5 rounded-xl transition text-sm shadow">Guardar e Inscribir</button>
+                            <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl transition text-sm shadow">Guardar e Inscribir</button>
                         </form>
                     </div>
 
                     <!-- Lista de Estudiantes Inscritos -->
-                    <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-lg space-y-4 flex flex-col">
+                    <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-sm space-y-4 flex flex-col">
                         <div class="flex justify-between items-center">
-                            <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-users-rectangle"></i> Estudiantes Registrados</h3>
-                            <span id="admin-student-count" class="text-xs bg-chess-dark px-3 py-1 rounded-full text-gray-300 border border-chess-border font-bold">Total: 0</span>
+                            <h3 class="text-lg font-bold text-amber-600 flex items-center gap-2"><i class="fa-solid fa-users-rectangle"></i> Estudiantes Registrados</h3>
+                            <span id="admin-student-count" class="text-xs bg-chess-dark px-3 py-1 rounded-full text-slate-600 border border-chess-border font-bold">Total: 0</span>
                         </div>
                         <div class="bg-chess-dark border border-chess-border rounded-xl overflow-y-auto max-h-72 flex-grow">
                             <table class="w-full text-left text-xs">
-                                <thead class="bg-chess-card text-gray-400 sticky top-0 border-b border-chess-border">
+                                <thead class="bg-chess-card text-slate-500 sticky top-0 border-b border-chess-border">
                                     <tr>
                                         <th class="p-3">Nombre</th>
                                         <th class="p-3">Grupo</th>
@@ -368,18 +356,18 @@
                 </div>
 
                 <!-- Actualizar Resultados y Fechas (Grupos) -->
-                <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-lg space-y-4">
-                    <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Gestión de Fase de Grupos (Fechas y Resultados)</h3>
+                <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-amber-600 flex items-center gap-2"><i class="fa-solid fa-pen-to-square"></i> Gestión de Fase de Grupos (Fechas y Resultados)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Grupo</label>
-                            <select id="admin-res-group" onchange="populateAdminMatches()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Grupo</label>
+                            <select id="admin-res-group" onchange="populateAdminMatches()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500">
                                 <!-- Dinámico -->
                             </select>
                         </div>
                         <div class="md:col-span-2">
-                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Partida</label>
-                            <select id="admin-res-match" onchange="loadMatchDateToInput()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Partida</label>
+                            <select id="admin-res-match" onchange="loadMatchDateToInput()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500">
                                 <!-- Dinámico -->
                             </select>
                         </div>
@@ -388,14 +376,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-chess-border pt-4">
                         <!-- Programar Fecha Independiente -->
                         <div class="space-y-3">
-                            <label class="block text-xs font-semibold text-amber-400 uppercase">1. Programar Fecha y Hora (Antes de jugar)</label>
-                            <input type="datetime-local" id="admin-res-date" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
-                            <button onclick="saveMatchDateOnly()" class="w-full bg-chess-border hover:bg-gray-700 text-white font-semibold py-2 rounded-xl transition text-sm">Guardar Solo Fecha</button>
+                            <label class="block text-xs font-semibold text-amber-700 uppercase">1. Programar Fecha y Hora (Antes de jugar)</label>
+                            <input type="datetime-local" id="admin-res-date" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500">
+                            <button onclick="saveMatchDateOnly()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold py-2 rounded-xl transition text-sm">Guardar Solo Fecha</button>
                         </div>
                         <!-- Registrar Resultado -->
                         <div class="space-y-3">
-                            <label class="block text-xs font-semibold text-emerald-400 uppercase">2. Registrar Resultado (Cuando finalice)</label>
-                            <select id="admin-res-outcome" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <label class="block text-xs font-semibold text-emerald-700 uppercase">2. Registrar Resultado (Cuando finalice)</label>
+                            <select id="admin-res-outcome" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500">
                                 <option value="WHITE">Gana Blancas (1 - 0)</option>
                                 <option value="BLACK">Gana Negras (0 - 1)</option>
                                 <option value="DRAW">Tablas / Empate (0.5)</option>
@@ -406,11 +394,11 @@
                 </div>
 
                 <!-- Brackets Admin (Fechas y Ganadores) -->
-                <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-lg space-y-4">
+                <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-sm space-y-4">
                     <div class="flex justify-between items-center flex-wrap gap-4">
                         <div>
-                            <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2"><i class="fa-solid fa-sitemap"></i> Gestión de Eliminación Directa (Octavos, Cuartos, etc.)</h3>
-                            <p class="text-sm text-gray-400">Genera llaves, programa sus fechas y avanza ganadores</p>
+                            <h3 class="text-lg font-bold text-amber-600 flex items-center gap-2"><i class="fa-solid fa-sitemap"></i> Gestión de Eliminación Directa (Octavos, Cuartos, etc.)</h3>
+                            <p class="text-sm text-slate-500">Genera llaves, programa sus fechas y avanza ganadores</p>
                         </div>
                         <button onclick="generateBrackets()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-xl transition shadow text-sm">Generar / Reiniciar Octavos</button>
                     </div>
@@ -418,8 +406,8 @@
                     <!-- Programar Fecha de Llaves -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-chess-border">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Ronda (Fecha)</label>
-                            <select id="admin-bracket-sched-round" onchange="populateAdminBracketSchedule()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Ronda (Fecha)</label>
+                            <select id="admin-bracket-sched-round" onchange="populateAdminBracketSchedule()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500">
                                 <option value="r16">Octavos de Final</option>
                                 <option value="qf">Cuartos de Final</option>
                                 <option value="sf">Semifinales</option>
@@ -427,23 +415,23 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Llave</label>
-                            <select id="admin-bracket-sched-match" onchange="loadBracketDateToInput()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Llave</label>
+                            <select id="admin-bracket-sched-match" onchange="loadBracketDateToInput()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500">
                                 <!-- Dinámico -->
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Fecha y Hora</label>
-                            <input type="datetime-local" id="admin-bracket-sched-date" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-amber-500 mb-2">
-                            <button onclick="saveBracketDate()" class="w-full bg-chess-border hover:bg-gray-700 text-white text-xs font-bold py-2 rounded-lg transition">Guardar Fecha de Llave</button>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Fecha y Hora</label>
+                            <input type="datetime-local" id="admin-bracket-sched-date" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2 text-slate-800 text-sm focus:outline-none focus:border-amber-500 mb-2">
+                            <button onclick="saveBracketDate()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold py-2 rounded-lg transition">Guardar Fecha de Llave</button>
                         </div>
                     </div>
 
                     <!-- Avanzar Ganadores -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-chess-border">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Ronda (Ganador)</label>
-                            <select id="admin-bracket-round" onchange="populateBracketMatches()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Ronda (Ganador)</label>
+                            <select id="admin-bracket-round" onchange="populateBracketMatches()" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500">
                                 <option value="r16">Octavos de Final</option>
                                 <option value="qf">Cuartos de Final</option>
                                 <option value="sf">Semifinales</option>
@@ -451,14 +439,14 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Llave / Enfrentamiento</label>
-                            <select id="admin-bracket-match" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Llave / Enfrentamiento</label>
+                            <select id="admin-bracket-match" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500">
                                 <!-- Dinámico -->
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-300 mb-1 uppercase">Ganador de la Llave</label>
-                            <select id="admin-bracket-winner" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 mb-2">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase">Ganador de la Llave</label>
+                            <select id="admin-bracket-winner" class="w-full bg-chess-dark border border-chess-border rounded-xl px-4 py-2.5 text-slate-800 text-sm focus:outline-none focus:border-amber-500 mb-2">
                                 <option value="1">Participante 1</option>
                                 <option value="2">Participante 2</option>
                             </select>
@@ -472,17 +460,15 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-chess-dark border-t border-chess-border py-6 mt-12 text-center text-xs text-gray-400">
+    <footer class="bg-chess-card border-t border-chess-border py-6 mt-12 text-center text-xs text-slate-500">
         <p>Sistema de Gestión de Torneo de Ajedrez Escolar &copy; 2026</p>
     </footer>
     
 <!-- LÓGICA JAVASCRIPT CONECTADA A FIREBASE FIRESTORE -->
 <script type="module">
-    // Importar Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-    // Tu configuración de Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyA2mfU84tJWQHD-SWf4xXYuowV4N00_Ra4",
         authDomain: "torneoajedrez.firebaseapp.com",
@@ -492,11 +478,9 @@
         appId: "1:181519995288:web:8b21c219caa7dc9d3b1bed"
     };
 
-    // Inicializar Firebase y Firestore
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // ESTADO GLOBAL
     window.appData = {
         students: [], 
         matches: {},  
@@ -506,7 +490,6 @@
     const TOTAL_GROUPS = 16;
     const docRef = doc(db, "torneo", "estado_actual");
 
-    // FUNCIÓN PARA GUARDAR EN LA NUBE (FIRESTORE)
     window.saveData = async function() {
         try {
             await setDoc(docRef, window.appData);
@@ -516,29 +499,24 @@
         }
     }
 
-    // CARGAR DATOS DESDE LA NUBE AL INICIAR
     async function loadDataFromCloud() {
         try {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 window.appData = docSnap.data();
             } else {
-                // Si el documento no existe aún, lo creamos vacío en la nube
                 await setDoc(docRef, window.appData);
             }
         } catch (e) {
             console.error("Error al cargar datos de la nube: ", e);
         }
 
-        // Inicializar la interfaz una vez obtenidos los datos
         initGroupSelectors();
         updateStatCounters();
         renderGroups();
         renderSchedule();
         renderBracketsView();
     }
-
-    // --- EL RESTO DE TUS FUNCIONES SE MANTIENEN IGUAL ---
 
     window.reiniciarTorneo = async function() {
         if (!confirm('¿Estás seguro de reiniciar el torneo en la nube? Esto borrará brackets y fechas eliminatorias.')) {
@@ -578,7 +556,7 @@
             if (tabEl) tabEl.classList.add('hidden');
             const btn = document.getElementById(`btn-${t}`);
             if (btn) {
-                btn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition text-gray-300 hover:text-white hover:bg-chess-border";
+                btn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-600 hover:text-slate-900 hover:bg-chess-border";
             }
         });
         const targetTab = document.getElementById(`tab-${tabId}`);
@@ -587,9 +565,9 @@
         const activeBtn = document.getElementById(`btn-${tabId}`);
         if (activeBtn) {
             if (tabId === 'admin' || tabId === 'credits') {
-                activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-amber-500 text-chess-darker shadow";
+                activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-amber-600 text-white shadow";
             } else {
-                activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-chess-accent text-chess-darker shadow";
+                activeBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition bg-amber-600 text-white shadow";
             }
         }
 
@@ -728,24 +706,24 @@
         tbody.innerHTML = '';
 
         if (groupStudents.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-gray-400">No hay estudiantes registrados en este grupo.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400">No hay estudiantes registrados en este grupo.</td></tr>`;
             return;
         }
 
         groupStudents.forEach((st, idx) => {
-            let trendIcon = `<span class="text-gray-500">—</span>`;
-            if (idx === 0 && groupStudents.length > 1) trendIcon = `<span class="text-emerald-400 font-bold">▲ Arriba</span>`;
-            else if (idx === groupStudents.length - 1 && groupStudents.length > 1) trendIcon = `<span class="text-rose-400 font-bold">▼ Abajo</span>`;
+            let trendIcon = `<span class="text-slate-400">—</span>`;
+            if (idx === 0 && groupStudents.length > 1) trendIcon = `<span class="text-emerald-600 font-bold">▲ Arriba</span>`;
+            else if (idx === groupStudents.length - 1 && groupStudents.length > 1) trendIcon = `<span class="text-rose-600 font-bold">▼ Abajo</span>`;
 
             tbody.innerHTML += `
-                <tr class="hover:bg-chess-dark transition">
-                    <td class="p-4 font-bold text-amber-400">${idx + 1}</td>
-                    <td class="p-4 font-semibold text-white">${st.nombre} ${st.apellido}</td>
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-4 font-bold text-amber-600">${idx + 1}</td>
+                    <td class="p-4 font-semibold text-slate-900">${st.nombre} ${st.apellido}</td>
                     <td class="p-4 text-center">${st.pj}</td>
-                    <td class="p-4 text-center text-emerald-400">${st.g}</td>
-                    <td class="p-4 text-center text-amber-400">${st.e}</td>
-                    <td class="p-4 text-center text-rose-400">${st.p}</td>
-                    <td class="p-4 text-center font-bold text-amber-400">${st.pts}</td>
+                    <td class="p-4 text-center text-emerald-600">${st.g}</td>
+                    <td class="p-4 text-center text-amber-600">${st.e}</td>
+                    <td class="p-4 text-center text-rose-600">${st.p}</td>
+                    <td class="p-4 text-center font-bold text-amber-600">${st.pts}</td>
                     <td class="p-4 text-center text-xs">${trendIcon}</td>
                 </tr>
             `;
@@ -805,40 +783,40 @@
         });
 
         if (itemsToShow.length === 0) {
-            container.innerHTML = `<div class="col-span-2 bg-chess-card border border-chess-border p-8 rounded-2xl text-center text-gray-400">No hay enfrentamientos programados todavía.</div>`;
+            container.innerHTML = `<div class="col-span-2 bg-chess-card border border-chess-border p-8 rounded-2xl text-center text-slate-400">No hay enfrentamientos programados todavía.</div>`;
             return;
         }
 
         itemsToShow.forEach((item, idx) => {
-            let statusBadge = `<span class="text-xs bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full border border-amber-500/30">Próximo Encuentro</span>`;
+            let statusBadge = `<span class="text-xs bg-amber-50 text-amber-700 px-3 py-1 rounded-full border border-amber-200">Próximo Encuentro</span>`;
             
             if (item.tipo === 'grupo') {
-                if (item.result === 'WHITE') statusBadge = `<span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">Ganó Blancas</span>`;
-                if (item.result === 'BLACK') statusBadge = `<span class="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/30">Ganó Negras</span>`;
-                if (item.result === 'DRAW') statusBadge = `<span class="text-xs bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30">Tablas (Empate)</span>`;
+                if (item.result === 'WHITE') statusBadge = `<span class="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200">Ganó Blancas</span>`;
+                if (item.result === 'BLACK') statusBadge = `<span class="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-200">Ganó Negras</span>`;
+                if (item.result === 'DRAW') statusBadge = `<span class="text-xs bg-yellow-50 text-yellow-700 px-3 py-1 rounded-full border border-yellow-200">Tablas (Empate)</span>`;
             } else {
-                if (item.winner) statusBadge = `<span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">Ganador: ${item.winner}</span>`;
+                if (item.winner) statusBadge = `<span class="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200">Ganador: ${item.winner}</span>`;
             }
 
             let fechaFormatted = item.fecha ? new Date(item.fecha).toLocaleString() : 'Fecha por programar';
 
             container.innerHTML += `
-                <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-md space-y-4">
-                    <div class="flex justify-between items-center text-xs text-gray-400 border-b border-chess-border pb-3">
-                        <span class="font-bold text-amber-400">${item.subtitulo} — Encuentro #${idx + 1}</span>
+                <div class="bg-chess-card border border-chess-border p-6 rounded-2xl shadow-sm space-y-4">
+                    <div class="flex justify-between items-center text-xs text-slate-500 border-b border-chess-border pb-3">
+                        <span class="font-bold text-amber-600">${item.subtitulo} — Encuentro #${idx + 1}</span>
                         ${statusBadge}
                     </div>
-                    <div class="text-xs text-gray-300 flex items-center gap-2">
-                        <i class="fa-solid fa-clock text-amber-500"></i> <span><b>Fecha Programada:</b> ${fechaFormatted}</span>
+                    <div class="text-xs text-slate-600 flex items-center gap-2">
+                        <i class="fa-solid fa-clock text-amber-600"></i> <span><b>Fecha Programada:</b> ${fechaFormatted}</span>
                     </div>
                     <div class="grid grid-cols-2 gap-4 items-center">
                         <div class="bg-chess-dark p-3.5 rounded-xl border border-chess-border text-center">
-                            <span class="text-[10px] uppercase font-bold text-gray-400 block mb-1">${item.label1}</span>
-                            <span class="font-bold text-white text-sm">${item.p1}</span>
+                            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">${item.label1}</span>
+                            <span class="font-bold text-slate-900 text-sm">${item.p1}</span>
                         </div>
                         <div class="bg-chess-dark p-3.5 rounded-xl border border-chess-border text-center">
-                            <span class="text-[10px] uppercase font-bold text-gray-400 block mb-1">${item.label2}</span>
-                            <span class="font-bold text-white text-sm">${item.p2}</span>
+                            <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">${item.label2}</span>
+                            <span class="font-bold text-slate-900 text-sm">${item.p2}</span>
                         </div>
                     </div>
                 </div>
@@ -1128,9 +1106,9 @@
         (window.appData.brackets.r16 || []).forEach((m, idx) => {
             r16Container.innerHTML += `
                 <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
-                    <div class="text-gray-400 font-bold mb-1">Octavos #${idx + 1}</div>
-                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
-                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                    <div class="text-slate-500 font-bold mb-1">Octavos #${idx + 1}</div>
+                    <div class="text-slate-900 px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200' : 'bg-chess-card'}">${m.p1}</div>
+                    <div class="text-slate-900 px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200' : 'bg-chess-card'}">${m.p2}</div>
                 </div>
             `;
         });
@@ -1139,9 +1117,9 @@
         (window.appData.brackets.qf || []).forEach((m, idx) => {
             qfContainer.innerHTML += `
                 <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
-                    <div class="text-amber-400 font-bold mb-1">Cuartos #${idx + 1}</div>
-                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
-                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                    <div class="text-amber-700 font-bold mb-1">Cuartos #${idx + 1}</div>
+                    <div class="text-slate-900 px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200' : 'bg-chess-card'}">${m.p1}</div>
+                    <div class="text-slate-900 px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200' : 'bg-chess-card'}">${m.p2}</div>
                 </div>
             `;
         });
@@ -1150,9 +1128,9 @@
         (window.appData.brackets.sf || []).forEach((m, idx) => {
             sfContainer.innerHTML += `
                 <div class="bg-chess-dark p-3 rounded-xl border border-chess-border text-xs space-y-1">
-                    <div class="text-amber-400 font-bold mb-1">Semifinal #${idx + 1}</div>
-                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
-                    <div class="text-white px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                    <div class="text-amber-700 font-bold mb-1">Semifinal #${idx + 1}</div>
+                    <div class="text-slate-900 px-2.5 py-1.5 rounded ${m.winner === m.p1 ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200' : 'bg-chess-card'}">${m.p1}</div>
+                    <div class="text-slate-900 px-2.5 py-1.5 rounded ${m.winner === m.p2 ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200' : 'bg-chess-card'}">${m.p2}</div>
                 </div>
             `;
         });
@@ -1160,11 +1138,11 @@
         finalContainer.innerHTML = '';
         (window.appData.brackets.final || []).forEach((m) => {
             finalContainer.innerHTML += `
-                <div class="bg-gradient-to-br from-amber-900/40 to-chess-dark p-4 rounded-xl border border-amber-500/40 text-xs space-y-2 text-center shadow-lg">
-                    <div class="text-amber-400 font-extrabold uppercase tracking-wide"><i class="fa-solid fa-crown mr-1"></i> Gran Final</div>
-                    <div class="text-white px-3 py-2 rounded font-semibold ${m.winner === m.p1 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p1}</div>
-                    <div class="text-gray-400 font-bold">VS</div>
-                    <div class="text-white px-3 py-2 rounded font-semibold ${m.winner === m.p2 ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'bg-chess-card'}">${m.p2}</div>
+                <div class="bg-gradient-to-br from-amber-50 to-chess-dark p-4 rounded-xl border border-amber-300 text-xs space-y-2 text-center shadow-md">
+                    <div class="text-amber-700 font-extrabold uppercase tracking-wide"><i class="fa-solid fa-crown mr-1"></i> Gran Final</div>
+                    <div class="text-slate-900 px-3 py-2 rounded font-semibold ${m.winner === m.p1 ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200' : 'bg-chess-card'}">${m.p1}</div>
+                    <div class="text-slate-500 font-bold">VS</div>
+                    <div class="text-slate-900 px-3 py-2 rounded font-semibold ${m.winner === m.p2 ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200' : 'bg-chess-card'}">${m.p2}</div>
                 </div>
             `;
         });
@@ -1179,17 +1157,17 @@
         countEl.innerText = `Total: ${window.appData.students.length}`;
 
         if (window.appData.students.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-400">No hay estudiantes registrados.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-400">No hay estudiantes registrados.</td></tr>`;
             return;
         }
 
         window.appData.students.forEach(st => {
             tbody.innerHTML += `
-                <tr class="hover:bg-chess-dark transition">
-                    <td class="p-3 font-semibold text-white">${st.nombre} ${st.apellido}</td>
-                    <td class="p-3 text-amber-400">${st.grupo}</td>
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-3 font-semibold text-slate-900">${st.nombre} ${st.apellido}</td>
+                    <td class="p-3 text-amber-600">${st.grupo}</td>
                     <td class="p-3 text-center">
-                        <button onclick="deleteStudent('${st.id}')" class="bg-red-500/20 text-red-400 px-3 py-1 rounded-lg text-xs hover:bg-red-500/30 transition"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="deleteStudent('${st.id}')" class="bg-red-50 text-red-600 px-3 py-1 rounded-lg text-xs hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `;
@@ -1201,8 +1179,9 @@
         if (statEl) statEl.innerText = window.appData.students.length;
     }
 
-    // CARGA INICIAL DESDE LA NUBE
     window.onload = function() {
         loadDataFromCloud();
     };
 </script>
+</body>
+</html>
