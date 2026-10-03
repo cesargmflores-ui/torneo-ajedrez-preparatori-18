@@ -232,6 +232,36 @@
                 </form>
             </div>
 
+            <!-- Panel Anti-Robot (Oculto inicialmente) -->
+            <div id="admin-robot-box" class="hidden max-w-md mx-auto bg-chess-card border border-chess-border p-8 rounded-3xl shadow-sm space-y-6 text-center">
+                <div class="space-y-2">
+                    <div class="bg-amber-100 text-amber-800 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto border border-amber-300 text-xl">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-900">¿Eres un robot?</h2>
+                    <p class="text-xs text-slate-500">Verificación de seguridad requerida</p>
+                </div>
+
+                <!-- Imagen solicitada -->
+                <div class="flex justify-center">
+                    <img src="https://i.pinimg.com/originals/9f/f5/85/9ff585c33875ff6e16a4c3d591fe3ba6.jpg" alt="Verificación Robot" class="w-48 h-48 object-cover rounded-2xl border border-chess-border shadow-md">
+                </div>
+
+                <!-- Botones Sí / No -->
+                <div id="robot-buttons-container" class="grid grid-cols-2 gap-4 pt-2">
+                    <button onclick="handleRobotChoice('si')" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl transition shadow text-sm">Sí</button>
+                    <button onclick="handleRobotChoice('no')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition shadow text-sm">No</button>
+                </div>
+
+                <!-- Barra de carga (Oculta al inicio) -->
+                <div id="robot-loading-container" class="hidden space-y-3 pt-2">
+                    <p id="robot-status-text" class="text-xs font-bold text-amber-600 uppercase tracking-wider">Analizando...</p>
+                    <div class="w-full bg-chess-dark border border-chess-border rounded-full h-3 overflow-hidden">
+                        <div id="robot-progress-bar" class="bg-amber-600 h-full w-0 transition-all duration-[5000ms]"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Dashboard Admin -->
             <div id="admin-dashboard" class="hidden space-y-8">
                 <div class="flex justify-between items-center bg-chess-card p-6 rounded-2xl border border-chess-border flex-wrap gap-4 shadow-sm">
@@ -546,11 +576,17 @@
         if (tabId === 'admin') {
             if (sessionStorage.getItem('admin_auth') === 'true') {
                 document.getElementById('admin-auth-box').classList.add('hidden');
+                document.getElementById('admin-robot-box').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 renderAdminStudents();
                 populateAdminMatches();
                 populateBracketMatches();
                 populateAdminBracketSchedule();
+            } else {
+                // Si no está autenticado, mostrar formulario de contraseña y ocultar robot/dashboard
+                document.getElementById('admin-auth-box').classList.remove('hidden');
+                document.getElementById('admin-robot-box').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.add('hidden');
             }
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -560,21 +596,51 @@
         e.preventDefault();
         const pass = document.getElementById('admin-pass-input').value;
         if (pass === 'Puro501chingonyelprofealonsotambien') {
-            sessionStorage.setItem('admin_auth', 'true');
+            // Contraseña correcta: Ocultar login y mostrar panel Anti-Robot
             document.getElementById('admin-auth-box').classList.add('hidden');
-            document.getElementById('admin-dashboard').classList.remove('hidden');
-            renderAdminStudents();
-            populateAdminMatches();
-            populateBracketMatches();
-            populateAdminBracketSchedule();
+            document.getElementById('admin-robot-box').classList.remove('hidden');
+
+            // Resetear estado del panel robot por si reingresa
+            document.getElementById('robot-buttons-container').classList.remove('hidden');
+            document.getElementById('robot-loading-container').classList.add('hidden');
+            document.getElementById('robot-progress-bar').style.width = '0%';
         } else {
             alert('Contraseña incorrecta.');
+        }
+    }
+
+    window.handleRobotChoice = function(choice) {
+        if (choice === 'si') {
+            alert('Error: ¡Alerta de robot detectado! Acceso denegado.');
+            logoutAdmin();
+        } else {
+            // Eligió no: ocultar botones y mostrar barra de carga analizando
+            document.getElementById('robot-buttons-container').classList.add('hidden');
+            document.getElementById('robot-loading-container').classList.remove('hidden');
+
+            const progressBar = document.getElementById('robot-progress-bar');
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 50);
+
+            // Tras 5 segundos, dejar pasar al menú admin
+            setTimeout(() => {
+                document.getElementById('admin-robot-box').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                sessionStorage.setItem('admin_auth', 'true');
+
+                renderAdminStudents();
+                populateAdminMatches();
+                populateBracketMatches();
+                populateAdminBracketSchedule();
+            }, 5000);
         }
     }
 
     window.logoutAdmin = function() {
         sessionStorage.removeItem('admin_auth');
         document.getElementById('admin-auth-box').classList.remove('hidden');
+        document.getElementById('admin-robot-box').classList.add('hidden');
         document.getElementById('admin-dashboard').classList.add('hidden');
         document.getElementById('admin-pass-input').value = '';
     }
@@ -748,7 +814,6 @@
             });
         });
 
-        // Filtrar por fecha seleccionada
         if (filterDate !== 'ALL') {
             itemsToShow = itemsToShow.filter(item => item.fecha === filterDate);
         }
